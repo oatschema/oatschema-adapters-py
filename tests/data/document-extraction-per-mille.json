@@ -1,0 +1,41 @@
+{
+  "producer": "layout-model",
+  "extraction_type": "boxes",
+  "unit": "per_mille",
+  "blocks": [
+    {
+      "block_type": "box",
+      "text": "Header",
+      "page_number": 1,
+      "box": {
+        "x": 100,
+        "y": 50,
+        "width": 800,
+        "height": 30
+      }
+    },
+    {
+      "block_type": "box",
+      "text": "Body text",
+      "page_number": 1,
+      "box": {
+        "x": 100,
+        "y": 120,
+        "width": 800,
+        "height": 300
+      },
+      "score": 0.79
+    },
+    {
+      "block_type": "box",
+      "text": "Second page",
+      "page_number": 2,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 1000,
+        "height": 1000
+      }
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+# SPDX-FileCopyrightText: 2026 The OATS Authors
+# SPDX-License-Identifier: Apache-2.0
+
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "oatschema-adapters"
+dynamic = ["version"]
+description = "Export OATS (Open Annotation Task Schemas) records to standard formats, and parse them back."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE", "AUTHORS"]
+authors = [{ name = "OATS maintainers", email = "maintainers@oatschema.org" }]
+keywords = ["oats", "annotation", "json-schema", "srt", "webvtt", "hocr", "transcription", "ocr"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Operating System :: OS Independent",
+    "Typing :: Typed",
+]
+dependencies = [
+    "oatschema[validate]>=0.8.0.2,<0.9",
+    "srt>=3.5.3",
+    "webvtt-py>=0.5.1",
+]
+
+[project.urls]
+"Homepage" = "https://oatschema.org"
+"Repository" = "https://github.com/oatschema/oatschema-adapters-py"
+"Changelog" = "https://github.com/oatschema/oatschema-adapters-py/blob/main/CHANGELOG.md"
+
+[tool.hatch.version]
+path = "src/oatschema_adapters/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/oatschema_adapters"]
+
+[tool.hatch.build.targets.sdist]
+exclude = ["/.claude", "CLAUDE.md", "CLAUDE.local.md", "/venv", "/.venv", "uv.lock", ".github"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["oatschema_adapters"]
+branch = true
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "B"]
+ignore = ["F401"]
+
+[tool.mypy]
+exclude = ["dist/", "build/", "venv/", ".venv/"]
+mypy_path = "src"
+warn_unreachable = true
+strict = true
+
+[[tool.mypy.overrides]]
+module = ["srt", "webvtt", "webvtt.*", "hocr_tools_lib.*"]
+ignore_missing_imports = true
+
+[dependency-groups]
+dev = [
+    "hocr-tools-lib>=1.2.0",
+    "mypy>=1.15.0",
+    "pytest>=8.3.4",
+    "pytest-cov>=6.0.0",
+    "pyyaml>=6.0.3",
+    "ruff>=0.8.4",
+    "types-pyyaml>=6.0.12",
+]

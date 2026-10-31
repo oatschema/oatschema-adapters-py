@@ -1,0 +1,30 @@
+{
+  "producer": "md-adapter",
+  "segments": [
+    {
+      "end_time": 0.0,
+      "start_time": 0.0,
+      "text": "Almost a minute in."
+    },
+    {
+      "end_time": 0.0,
+      "events": [
+        "applause",
+        "music"
+      ],
+      "start_time": 0.0,
+      "text": ""
+    },
+    {
+      "end_time": 0.0,
+      "start_time": 0.0,
+      "text": "Almost an hour in."
+    },
+    {
+      "end_time": 0.0,
+      "start_time": 0.0,
+      "text": "Past the hour, with a\ttab."
+    }
+  ],
+  "text": "Almost a minute in. Almost an hour in. Past the hour, with a\ttab."
+}

@@ -1,0 +1,99 @@
+{
+  "blocks": [
+    {
+      "block_type": "text",
+      "box": {
+        "height": 10.0,
+        "width": 100.0,
+        "x": 10.0,
+        "y": 10.0
+      },
+      "page_number": 1,
+      "text": "=HYPERLINK(\"https://example.invalid\",\"Open\")"
+    },
+    {
+      "block_type": "text",
+      "box": {
+        "height": 10.0,
+        "width": 100.0,
+        "x": 10.0,
+        "y": 30.0
+      },
+      "page_number": 1,
+      "text": "+cmd"
+    },
+    {
+      "block_type": "text",
+      "box": {
+        "height": 10.0,
+        "width": 100.0,
+        "x": 10.0,
+        "y": 50.0
+      },
+      "page_number": 1,
+      "text": "-cmd"
+    },
+    {
+      "block_type": "text",
+      "box": {
+        "height": 10.0,
+        "width": 100.0,
+        "x": 10.0,
+        "y": 70.0
+      },
+      "page_number": 1,
+      "text": "@cmd"
+    },
+    {
+      "block_type": "text",
+      "box": {
+        "height": 10.0,
+        "width": 100.0,
+        "x": 10.0,
+        "y": 90.0
+      },
+      "page_number": 1,
+      "text": "\t=tab first"
+    },
+    {
+      "block_type": "text",
+      "box": {
+        "height": 10.0,
+        "width": 100.0,
+        "x": 10.0,
+        "y": 110.0
+      },
+      "page_number": 1,
+      "text": "\r=carriage return first"
+    },
+    {
+      "block_type": "text",
+      "page_number": 1,
+      "text": "'@quoted already"
+    },
+    {
+      "block_type": "text",
+      "page_number": 1,
+      "text": "-12.5"
+    },
+    {
+      "block_type": "text",
+      "page_number": 1,
+      "text": ""
+    },
+    {
+      "block_type": "box",
+      "box": {
+        "height": 50.0,
+        "width": 50.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "page_number": 2,
+      "text": null
+    }
+  ],
+  "extraction_type": "mixed",
+  "producer": "tsv-adapter",
+  "unit": "px"
+}

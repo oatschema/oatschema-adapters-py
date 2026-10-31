@@ -1,0 +1,11 @@
+page_number	block_type	x	y	width	height	text
+1	text	10	10	100	10	"=HYPERLINK(""https://example.invalid"",""Open"")"
+1	text	10	30	100	10	+cmd
+1	text	10	50	100	10	-cmd
+1	text	10	70	100	10	@cmd
+1	text	10	90	100	10	"	=tab first"
+1	text	10	110	100	10	"=carriage return first"
+1	text					'@quoted already
+1	text					-12.5
+1	text					
+2	box	0	0	50	50	

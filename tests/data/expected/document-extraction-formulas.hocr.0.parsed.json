@@ -1,0 +1,135 @@
+{
+  "blocks": [
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 10.0,
+        "width": 100.0,
+        "x": 10.0,
+        "y": 10.0
+      },
+      "page_number": 1,
+      "text": "=HYPERLINK(\"https://example.invalid\",\"Open\")"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 10.0,
+        "width": 100.0,
+        "x": 10.0,
+        "y": 30.0
+      },
+      "page_number": 1,
+      "text": "+cmd"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 10.0,
+        "width": 100.0,
+        "x": 10.0,
+        "y": 50.0
+      },
+      "page_number": 1,
+      "text": "-cmd"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 10.0,
+        "width": 100.0,
+        "x": 10.0,
+        "y": 70.0
+      },
+      "page_number": 1,
+      "text": "@cmd"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 10.0,
+        "width": 100.0,
+        "x": 10.0,
+        "y": 90.0
+      },
+      "page_number": 1,
+      "text": "=tab first"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 10.0,
+        "width": 100.0,
+        "x": 10.0,
+        "y": 110.0
+      },
+      "page_number": 1,
+      "text": "=carriage return first"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "page_number": 1,
+      "text": "'@quoted already"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "page_number": 1,
+      "text": "-12.5"
+    }
+  ],
+  "extraction_type": "mixed",
+  "page_height": [
+    {
+      "pages": [
+        1
+      ],
+      "value": 1000.0
+    },
+    {
+      "pages": [
+        2
+      ],
+      "value": 1000.0
+    }
+  ],
+  "page_width": [
+    {
+      "pages": [
+        1
+      ],
+      "value": 1000.0
+    },
+    {
+      "pages": [
+        2
+      ],
+      "value": 1000.0
+    }
+  ],
+  "producer": "hocr-adapter",
+  "unit": "px"
+}

@@ -1,0 +1,155 @@
+{
+  "producer": "pdf-extractor 1.2",
+  "extraction_type": "mixed",
+  "unit": "px",
+  "page_width": 1000,
+  "page_height": [
+    {
+      "value": 1400,
+      "pages": [
+        1
+      ]
+    },
+    {
+      "value": 1300,
+      "pages": [
+        2
+      ]
+    }
+  ],
+  "score_explanation": "OCR confidence: 0 to 1",
+  "attributes": {
+    "source": "scan",
+    "dpi": 300,
+    "language: primary": "eng"
+  },
+  "blocks": [
+    {
+      "block_type": "line",
+      "text": "A Report on Things",
+      "page_number": 1,
+      "box": {
+        "x": 100,
+        "y": 50,
+        "width": 600,
+        "height": 40
+      },
+      "attributes": {
+        "visual_class": "title"
+      }
+    },
+    {
+      "block_type": "line",
+      "text": "Background",
+      "page_number": 1,
+      "box": {
+        "x": 100,
+        "y": 120,
+        "width": 300,
+        "height": 24
+      },
+      "attributes": {
+        "visual_class": "h2"
+      }
+    },
+    {
+      "block_type": "line",
+      "text": "This paragraph runs over sev-",
+      "page_number": 1,
+      "box": {
+        "x": 100,
+        "y": 160,
+        "width": 400,
+        "height": 18
+      },
+      "score": 0.97
+    },
+    {
+      "block_type": "line",
+      "text": "eral lines and joins the hyph-",
+      "page_number": 1,
+      "box": {
+        "x": 100,
+        "y": 180,
+        "width": 400,
+        "height": 18
+      },
+      "score": 0.95
+    },
+    {
+      "block_type": "line",
+      "text": "enated words.",
+      "page_number": 1,
+      "box": {
+        "x": 100,
+        "y": 200,
+        "width": 120,
+        "height": 18
+      },
+      "score": 0.62
+    },
+    {
+      "block_type": "line",
+      "text": "Left column",
+      "page_number": 1,
+      "box": {
+        "x": 100,
+        "y": 300,
+        "width": 300,
+        "height": 18
+      }
+    },
+    {
+      "block_type": "line",
+      "text": "Right column",
+      "page_number": 1,
+      "box": {
+        "x": 550,
+        "y": 300,
+        "width": 300,
+        "height": 18
+      }
+    },
+    {
+      "block_type": "line",
+      "text": "Below both",
+      "page_number": 1,
+      "box": {
+        "x": 100,
+        "y": 400,
+        "width": 300,
+        "height": 18
+      },
+      "attributes": {
+        "visual_class": "heading"
+      }
+    },
+    {
+      "block_type": "box",
+      "page_number": 1,
+      "box": {
+        "x": 100.5,
+        "y": 500.25,
+        "width": 400.75,
+        "height": 200
+      }
+    },
+    {
+      "block_type": "text",
+      "text": "Page two text without geometry.",
+      "page_number": 2
+    },
+    {
+      "block_type": "line",
+      "text": "Page two line.",
+      "page_number": 2,
+      "box": {
+        "x": 120,
+        "y": 90,
+        "width": 300,
+        "height": 20
+      },
+      "score": 0.3
+    }
+  ]
+}

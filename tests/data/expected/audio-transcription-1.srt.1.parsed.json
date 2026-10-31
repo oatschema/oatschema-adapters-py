@@ -1,0 +1,31 @@
+{
+  "producer": "srt-adapter",
+  "segments": [
+    {
+      "end_time": 4.75,
+      "start_time": 0.5,
+      "text": "Maria: Welcome back! Today, my guest is the renowned chef, Jean-Pierre."
+    },
+    {
+      "end_time": 8.25,
+      "start_time": 5.1,
+      "text": "Jean-Pierre: Thank you, it's a pleasure. You know, the secret is simple,"
+    },
+    {
+      "end_time": 10.9,
+      "start_time": 8.25,
+      "text": "Jean-Pierre: c'est une question de respect pour le produit."
+    },
+    {
+      "end_time": 11.8,
+      "start_time": 11.0,
+      "text": "Maria: [laughter]"
+    },
+    {
+      "end_time": 14.5,
+      "start_time": 12.0,
+      "text": "Jean-Pierre: It's all about respecting the product."
+    }
+  ],
+  "text": "Maria: Welcome back! Today, my guest is the renowned chef, Jean-Pierre. Jean-Pierre: Thank you, it's a pleasure. You know, the secret is simple, Jean-Pierre: c'est une question de respect pour le produit. Maria: [laughter] Jean-Pierre: It's all about respecting the product."
+}

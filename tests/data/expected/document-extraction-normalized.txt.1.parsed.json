@@ -1,0 +1,10 @@
+{
+  "blocks": [
+    {
+      "block_type": "text",
+      "text": "Top left\n\nNext line\n\nFar below\n\nA shape"
+    }
+  ],
+  "extraction_type": "text",
+  "producer": "txt-adapter"
+}

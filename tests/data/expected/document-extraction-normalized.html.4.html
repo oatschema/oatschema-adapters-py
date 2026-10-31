@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Document Extraction</title>
+  <style>
+
+    /* Core Structure (Do not override unless necessary) */
+    .page-container { position: relative; box-sizing: border-box; }
+    .layout-y { display: flex; flex-direction: column; width: 100%; }
+    .layout-x { display: flex; flex-direction: row; width: 100%; align-items: flex-start; }
+    .col { box-sizing: border-box; }
+    .block-text { white-space: pre-wrap; word-break: break-word; }
+    .figure-placeholder { display: flex; align-items: center; justify-content: center; text-transform: uppercase; }
+    .wireframe-box { position: absolute; overflow: hidden; box-sizing: border-box; transition: all 0.15s ease-in-out; }
+    .wireframe-box:hover { z-index: 1000; overflow: visible; height: auto !important; }
+    .document-footer { margin: 4rem auto 2rem auto; max-width: 850px; padding: 2rem 1rem; text-align: center; border-top: 2px solid; }
+
+
+  </style>
+</head>
+<body>
+  <div class="page-container page-flow">
+<div class="layout-y"><p class="block-text">Top left</p><p class="block-text">Next line</p><p class="block-text">Far below</p><p class="block-text">A shape</p></div>
+  </div>
+</body>
+</html>

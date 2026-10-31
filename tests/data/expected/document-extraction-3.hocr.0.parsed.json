@@ -1,0 +1,176 @@
+{
+  "blocks": [
+    {
+      "attributes": {
+        "hocr_class": "ocr_line",
+        "visual_class": "title"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 40.0,
+        "width": 600.0,
+        "x": 100.0,
+        "y": 50.0
+      },
+      "page_number": 1,
+      "text": "A Report on Things"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line",
+        "visual_class": "h2"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 24.0,
+        "width": 300.0,
+        "x": 100.0,
+        "y": 120.0
+      },
+      "page_number": 1,
+      "text": "Background"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 18.0,
+        "width": 400.0,
+        "x": 100.0,
+        "y": 160.0
+      },
+      "page_number": 1,
+      "score": 0.97,
+      "text": "This paragraph runs over sev-"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 18.0,
+        "width": 400.0,
+        "x": 100.0,
+        "y": 180.0
+      },
+      "page_number": 1,
+      "score": 0.95,
+      "text": "eral lines and joins the hyph-"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 18.0,
+        "width": 120.0,
+        "x": 100.0,
+        "y": 200.0
+      },
+      "page_number": 1,
+      "score": 0.62,
+      "text": "enated words."
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 18.0,
+        "width": 300.0,
+        "x": 100.0,
+        "y": 300.0
+      },
+      "page_number": 1,
+      "text": "Left column"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 18.0,
+        "width": 300.0,
+        "x": 550.0,
+        "y": 300.0
+      },
+      "page_number": 1,
+      "text": "Right column"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line",
+        "visual_class": "heading"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 18.0,
+        "width": 300.0,
+        "x": 100.0,
+        "y": 400.0
+      },
+      "page_number": 1,
+      "text": "Below both"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "page_number": 2,
+      "text": "Page two text without geometry."
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 20.0,
+        "width": 300.0,
+        "x": 120.0,
+        "y": 90.0
+      },
+      "page_number": 2,
+      "score": 0.3,
+      "text": "Page two line."
+    }
+  ],
+  "extraction_type": "mixed",
+  "page_height": [
+    {
+      "pages": [
+        1
+      ],
+      "value": 1400.0
+    },
+    {
+      "pages": [
+        2
+      ],
+      "value": 1300.0
+    }
+  ],
+  "page_width": [
+    {
+      "pages": [
+        1
+      ],
+      "value": 1000.0
+    },
+    {
+      "pages": [
+        2
+      ],
+      "value": 1000.0
+    }
+  ],
+  "producer": "hocr-adapter",
+  "unit": "px"
+}

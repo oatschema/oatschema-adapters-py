@@ -1,0 +1,5 @@
+page_number	block_type	x	y	width	height	text
+1	box	0.1	0.05	0.4	0.02	Top left
+1	box	0.1	0.072	0.4	0.02	Next line
+1	box	0.1	0.5	0.8	0.1	Far below
+1	polygon					A shape

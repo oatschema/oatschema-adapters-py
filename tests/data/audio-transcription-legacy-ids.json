@@ -1,0 +1,63 @@
+{
+  "track_id": 1,
+  "language": "eng",
+  "text": "Welcome back! Today, my guest is the renowned chef, Jean-Pierre. Thank you, it's a pleasure. You know, the secret is simple, c'est une question de respect pour le produit. It's all about respecting the product.",
+  "segments": [
+    {
+      "text": "Welcome back! Today, my guest is the renowned chef, Jean-Pierre.",
+      "start_time": 0.5,
+      "end_time": 4.75,
+      "speaker": {
+        "id": "host_maria",
+        "name": "Maria"
+      },
+      "events": [
+        "music"
+      ],
+      "score": 0.98
+    },
+    {
+      "text": "Thank you, it's a pleasure. You know, the secret is simple,",
+      "start_time": 5.1,
+      "end_time": 8.25,
+      "speaker": {
+        "id": 2,
+        "name": "Jean-Pierre"
+      },
+      "score": 0.95
+    },
+    {
+      "text": "c'est une question de respect pour le produit.",
+      "start_time": 8.25,
+      "end_time": 10.9,
+      "language": "fra",
+      "speaker": {
+        "id": 2,
+        "name": "Jean-Pierre"
+      },
+      "score": 0.92
+    },
+    {
+      "text": "[laughter]",
+      "start_time": 11.0,
+      "end_time": 11.8,
+      "speaker": {
+        "id": "host_maria",
+        "name": "Maria"
+      },
+      "events": [
+        "laughter"
+      ]
+    },
+    {
+      "text": "It's all about respecting the product.",
+      "start_time": 12.0,
+      "end_time": 14.5,
+      "speaker": {
+        "id": "2",
+        "name": "Jean-Pierre"
+      },
+      "score": 0.96
+    }
+  ]
+}

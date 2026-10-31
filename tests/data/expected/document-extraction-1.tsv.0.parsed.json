@@ -1,0 +1,39 @@
+{
+  "blocks": [
+    {
+      "block_type": "text",
+      "page_number": 1,
+      "text": "Annual Report Summary"
+    },
+    {
+      "block_type": "box",
+      "box": {
+        "height": 400.0,
+        "width": 250.0,
+        "x": 50.0,
+        "y": 120.0
+      },
+      "page_number": 1,
+      "text": "The first column of text begins here, discussing the quarterly earnings and projections for the upcoming fiscal year."
+    },
+    {
+      "block_type": "box",
+      "box": {
+        "height": 400.0,
+        "width": 250.0,
+        "x": 320.0,
+        "y": 120.0
+      },
+      "page_number": 1,
+      "text": "The second column contains shareholder information and a summary of the annual general meeting."
+    },
+    {
+      "block_type": "polygon",
+      "page_number": 2,
+      "text": "This caption is wrapped around a circular diagram on the page."
+    }
+  ],
+  "extraction_type": "mixed",
+  "producer": "tsv-adapter",
+  "unit": "px"
+}

@@ -1,0 +1,78 @@
+{
+  "extraction_type": "mixed",
+  "unit": "px",
+  "page_width": [
+    {
+      "value": 850,
+      "pages": [
+        1
+      ]
+    },
+    {
+      "value": 1100,
+      "pages": [
+        2
+      ]
+    }
+  ],
+  "page_height": 1100,
+  "blocks": [
+    {
+      "block_type": "box",
+      "id": "logo-box",
+      "page_number": 1,
+      "box": {
+        "x": 50,
+        "y": 50,
+        "width": 200,
+        "height": 80
+      },
+      "attributes": {
+        "visual_class": "logo"
+      }
+    },
+    {
+      "block_type": "multi_polygon",
+      "id": "occluded-stamp",
+      "page_number": 2,
+      "multi_polygon": [
+        [
+          {
+            "x": 100,
+            "y": 100
+          },
+          {
+            "x": 200,
+            "y": 100
+          },
+          {
+            "x": 200,
+            "y": 150
+          },
+          {
+            "x": 100,
+            "y": 150
+          }
+        ],
+        [
+          {
+            "x": 100,
+            "y": 180
+          },
+          {
+            "x": 200,
+            "y": 180
+          },
+          {
+            "x": 200,
+            "y": 250
+          },
+          {
+            "x": 100,
+            "y": 250
+          }
+        ]
+      ]
+    }
+  ]
+}

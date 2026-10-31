@@ -1,0 +1,122 @@
+{
+  "blocks": [
+    {
+      "block_type": "line",
+      "box": {
+        "height": 40.0,
+        "width": 600.0,
+        "x": 100.0,
+        "y": 50.0
+      },
+      "page_number": 1,
+      "text": "A Report on Things"
+    },
+    {
+      "block_type": "line",
+      "box": {
+        "height": 24.0,
+        "width": 300.0,
+        "x": 100.0,
+        "y": 120.0
+      },
+      "page_number": 1,
+      "text": "Background"
+    },
+    {
+      "block_type": "line",
+      "box": {
+        "height": 18.0,
+        "width": 400.0,
+        "x": 100.0,
+        "y": 160.0
+      },
+      "page_number": 1,
+      "text": "This paragraph runs over sev-"
+    },
+    {
+      "block_type": "line",
+      "box": {
+        "height": 18.0,
+        "width": 400.0,
+        "x": 100.0,
+        "y": 180.0
+      },
+      "page_number": 1,
+      "text": "eral lines and joins the hyph-"
+    },
+    {
+      "block_type": "line",
+      "box": {
+        "height": 18.0,
+        "width": 120.0,
+        "x": 100.0,
+        "y": 200.0
+      },
+      "page_number": 1,
+      "text": "enated words."
+    },
+    {
+      "block_type": "line",
+      "box": {
+        "height": 18.0,
+        "width": 300.0,
+        "x": 100.0,
+        "y": 300.0
+      },
+      "page_number": 1,
+      "text": "Left column"
+    },
+    {
+      "block_type": "line",
+      "box": {
+        "height": 18.0,
+        "width": 300.0,
+        "x": 550.0,
+        "y": 300.0
+      },
+      "page_number": 1,
+      "text": "Right column"
+    },
+    {
+      "block_type": "line",
+      "box": {
+        "height": 18.0,
+        "width": 300.0,
+        "x": 100.0,
+        "y": 400.0
+      },
+      "page_number": 1,
+      "text": "Below both"
+    },
+    {
+      "block_type": "box",
+      "box": {
+        "height": 200.0,
+        "width": 400.75,
+        "x": 100.5,
+        "y": 500.25
+      },
+      "page_number": 1,
+      "text": ""
+    },
+    {
+      "block_type": "text",
+      "page_number": 2,
+      "text": "Page two text without geometry."
+    },
+    {
+      "block_type": "line",
+      "box": {
+        "height": 20.0,
+        "width": 300.0,
+        "x": 120.0,
+        "y": 90.0
+      },
+      "page_number": 2,
+      "text": "Page two line."
+    }
+  ],
+  "extraction_type": "mixed",
+  "producer": "tsv-adapter",
+  "unit": "px"
+}

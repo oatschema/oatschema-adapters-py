@@ -1,0 +1,54 @@
+{
+  "producer": "whisper-large-v3",
+  "track_id": "1",
+  "language": "eng",
+  "duration": 3730.5,
+  "score_explanation": "Mean token probability: higher is better # not a comment",
+  "attributes": {
+    "model": "large-v3",
+    "beam size": 5,
+    "notes: key": "a: b",
+    "diarized": true,
+    "empty": null
+  },
+  "segments": [
+    {
+      "text": "Almost a minute in.",
+      "start_time": 59.9996,
+      "end_time": 61.0004,
+      "speaker": {
+        "id": "s1",
+        "name": "Ada"
+      },
+      "score": 0.5
+    },
+    {
+      "text": "",
+      "start_time": 61.5,
+      "end_time": 62.0,
+      "events": [
+        "applause",
+        "music"
+      ]
+    },
+    {
+      "text": "Almost an hour in.",
+      "start_time": 3599.9996,
+      "end_time": 3600.25,
+      "speaker": {
+        "id": "s2"
+      }
+    },
+    {
+      "text": "Past the hour, with a\ttab.",
+      "start_time": 3725.25,
+      "end_time": 3730.5,
+      "speaker": {
+        "id": "s1",
+        "name": "Ada"
+      },
+      "language": "eng",
+      "score": 0.91
+    }
+  ]
+}

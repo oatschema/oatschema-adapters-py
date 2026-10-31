@@ -1,0 +1,11 @@
+{
+  "blocks": [
+    {
+      "block_type": "text",
+      "text": "One block of text.\n\nWith two paragraphs."
+    }
+  ],
+  "extraction_type": "mixed",
+  "producer": "tsv-adapter",
+  "unit": "px"
+}

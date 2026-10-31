@@ -1,0 +1,10 @@
+{
+  "blocks": [
+    {
+      "block_type": "text",
+      "text": "--- Page 2 ---"
+    }
+  ],
+  "extraction_type": "text",
+  "producer": "txt-adapter"
+}

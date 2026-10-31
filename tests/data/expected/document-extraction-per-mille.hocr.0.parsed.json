@@ -1,0 +1,78 @@
+{
+  "blocks": [
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 30.0,
+        "width": 800.0,
+        "x": 100.0,
+        "y": 50.0
+      },
+      "page_number": 1,
+      "text": "Header"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 300.0,
+        "width": 800.0,
+        "x": 100.0,
+        "y": 120.0
+      },
+      "page_number": 1,
+      "score": 0.79,
+      "text": "Body text"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 1000.0,
+        "width": 1000.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "page_number": 2,
+      "text": "Second page"
+    }
+  ],
+  "extraction_type": "mixed",
+  "page_height": [
+    {
+      "pages": [
+        1
+      ],
+      "value": 1000.0
+    },
+    {
+      "pages": [
+        2
+      ],
+      "value": 1000.0
+    }
+  ],
+  "page_width": [
+    {
+      "pages": [
+        1
+      ],
+      "value": 1000.0
+    },
+    {
+      "pages": [
+        2
+      ],
+      "value": 1000.0
+    }
+  ],
+  "producer": "hocr-adapter",
+  "unit": "px"
+}

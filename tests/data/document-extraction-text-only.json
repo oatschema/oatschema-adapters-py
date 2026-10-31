@@ -1,0 +1,10 @@
+{
+  "producer": "txt-adapter",
+  "extraction_type": "text",
+  "blocks": [
+    {
+      "block_type": "text",
+      "text": "One block of text.\n\nWith two paragraphs."
+    }
+  ]
+}

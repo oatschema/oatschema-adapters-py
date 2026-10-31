@@ -1,0 +1,13 @@
+{
+  "language": "eng",
+  "segments": [
+    {
+      "text": "Hello there.",
+      "start_time": 0.0,
+      "end_time": 1.5,
+      "speaker": {
+        "name": "Obi-Wan"
+      }
+    }
+  ]
+}

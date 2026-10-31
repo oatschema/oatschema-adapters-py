@@ -1,0 +1,805 @@
+{
+  "audio-transcription-1.md.0": {
+    "error": null
+  },
+  "audio-transcription-1.md.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-1.md.1": {
+    "error": null
+  },
+  "audio-transcription-1.md.1.parsed": {
+    "error": null
+  },
+  "audio-transcription-1.md.2": {
+    "error": null
+  },
+  "audio-transcription-1.md.2.parsed": {
+    "error": null
+  },
+  "audio-transcription-1.md.3": {
+    "error": null
+  },
+  "audio-transcription-1.md.3.parsed": {
+    "error": null
+  },
+  "audio-transcription-1.srt.0": {
+    "error": null
+  },
+  "audio-transcription-1.srt.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-1.srt.1": {
+    "error": null
+  },
+  "audio-transcription-1.srt.1.parsed": {
+    "error": null
+  },
+  "audio-transcription-1.tsv.0": {
+    "error": null
+  },
+  "audio-transcription-1.tsv.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-1.tsv.1": {
+    "error": null
+  },
+  "audio-transcription-1.tsv.1.parsed": {
+    "error": null
+  },
+  "audio-transcription-1.txt.0": {
+    "error": null
+  },
+  "audio-transcription-1.txt.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-1.vtt.0": {
+    "error": null
+  },
+  "audio-transcription-1.vtt.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-1.vtt.1": {
+    "error": null
+  },
+  "audio-transcription-1.vtt.1.parsed": {
+    "error": null
+  },
+  "audio-transcription-2.md.0": {
+    "error": null
+  },
+  "audio-transcription-2.md.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-2.md.1": {
+    "error": null
+  },
+  "audio-transcription-2.md.1.parsed": {
+    "error": null
+  },
+  "audio-transcription-2.md.2": {
+    "error": null
+  },
+  "audio-transcription-2.md.2.parsed": {
+    "error": null
+  },
+  "audio-transcription-2.md.3": {
+    "error": null
+  },
+  "audio-transcription-2.md.3.parsed": {
+    "error": null
+  },
+  "audio-transcription-2.srt.0": {
+    "error": null
+  },
+  "audio-transcription-2.srt.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-2.srt.1": {
+    "error": null
+  },
+  "audio-transcription-2.srt.1.parsed": {
+    "error": null
+  },
+  "audio-transcription-2.tsv.0": {
+    "error": null
+  },
+  "audio-transcription-2.tsv.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-2.tsv.1": {
+    "error": null
+  },
+  "audio-transcription-2.tsv.1.parsed": {
+    "error": null
+  },
+  "audio-transcription-2.txt.0": {
+    "error": null
+  },
+  "audio-transcription-2.txt.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-2.vtt.0": {
+    "error": "MalformedCaptionError",
+    "message": "Invalid timestamp '00:00:60.000'"
+  },
+  "audio-transcription-2.vtt.1": {
+    "error": "MalformedCaptionError",
+    "message": "Invalid timestamp '00:00:60.000'"
+  },
+  "audio-transcription-formulas.md.0": {
+    "error": null
+  },
+  "audio-transcription-formulas.md.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-formulas.md.1": {
+    "error": null
+  },
+  "audio-transcription-formulas.md.1.parsed": {
+    "error": null
+  },
+  "audio-transcription-formulas.md.2": {
+    "error": null
+  },
+  "audio-transcription-formulas.md.2.parsed": {
+    "error": null
+  },
+  "audio-transcription-formulas.md.3": {
+    "error": null
+  },
+  "audio-transcription-formulas.md.3.parsed": {
+    "error": null
+  },
+  "audio-transcription-formulas.srt.0": {
+    "error": null
+  },
+  "audio-transcription-formulas.srt.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-formulas.srt.1": {
+    "error": null
+  },
+  "audio-transcription-formulas.srt.1.parsed": {
+    "error": null
+  },
+  "audio-transcription-formulas.tsv.0": {
+    "error": null
+  },
+  "audio-transcription-formulas.tsv.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-formulas.tsv.1": {
+    "error": null
+  },
+  "audio-transcription-formulas.tsv.1.parsed": {
+    "error": "AttributeError",
+    "message": "'NoneType' object has no attribute 'strip'"
+  },
+  "audio-transcription-formulas.txt.0": {
+    "error": null
+  },
+  "audio-transcription-formulas.txt.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-formulas.vtt.0": {
+    "error": null
+  },
+  "audio-transcription-formulas.vtt.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-formulas.vtt.1": {
+    "error": null
+  },
+  "audio-transcription-formulas.vtt.1.parsed": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.md.0": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.md.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.md.1": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.md.1.parsed": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.md.2": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.md.2.parsed": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.md.3": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.md.3.parsed": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.srt.0": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.srt.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.srt.1": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.srt.1.parsed": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.tsv.0": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.tsv.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.tsv.1": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.tsv.1.parsed": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.txt.0": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.txt.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.vtt.0": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.vtt.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.vtt.1": {
+    "error": null
+  },
+  "audio-transcription-legacy-ids.vtt.1.parsed": {
+    "error": null
+  },
+  "audio-transcription-text-only.md.0": {
+    "error": null
+  },
+  "audio-transcription-text-only.md.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-text-only.md.1": {
+    "error": null
+  },
+  "audio-transcription-text-only.md.1.parsed": {
+    "error": null
+  },
+  "audio-transcription-text-only.md.2": {
+    "error": null
+  },
+  "audio-transcription-text-only.md.2.parsed": {
+    "error": null
+  },
+  "audio-transcription-text-only.md.3": {
+    "error": null
+  },
+  "audio-transcription-text-only.md.3.parsed": {
+    "error": null
+  },
+  "audio-transcription-text-only.srt.0": {
+    "error": "ValueError",
+    "message": "The provided record does not contain any 'segments'."
+  },
+  "audio-transcription-text-only.srt.1": {
+    "error": "ValueError",
+    "message": "The provided record does not contain any 'segments'."
+  },
+  "audio-transcription-text-only.tsv.0": {
+    "error": "ValueError",
+    "message": "The provided record does not contain any 'segments'."
+  },
+  "audio-transcription-text-only.tsv.1": {
+    "error": "ValueError",
+    "message": "The provided record does not contain any 'segments'."
+  },
+  "audio-transcription-text-only.txt.0": {
+    "error": null
+  },
+  "audio-transcription-text-only.txt.0.parsed": {
+    "error": null
+  },
+  "audio-transcription-text-only.vtt.0": {
+    "error": "ValueError",
+    "message": "The provided record does not contain any 'segments'."
+  },
+  "audio-transcription-text-only.vtt.1": {
+    "error": "ValueError",
+    "message": "The provided record does not contain any 'segments'."
+  },
+  "document-extraction-1.hocr.0": {
+    "error": null
+  },
+  "document-extraction-1.hocr.0.parsed": {
+    "error": null
+  },
+  "document-extraction-1.html.0": {
+    "error": null
+  },
+  "document-extraction-1.html.1": {
+    "error": null
+  },
+  "document-extraction-1.html.2": {
+    "error": null
+  },
+  "document-extraction-1.html.3": {
+    "error": null
+  },
+  "document-extraction-1.html.4": {
+    "error": null
+  },
+  "document-extraction-1.html.5": {
+    "error": null
+  },
+  "document-extraction-1.html.6": {
+    "error": null
+  },
+  "document-extraction-1.html.7": {
+    "error": "TypeError",
+    "message": "extract_spatial_pages() got an unexpected keyword argument 'gap_x'"
+  },
+  "document-extraction-1.html.8": {
+    "error": null
+  },
+  "document-extraction-1.md.0": {
+    "error": null
+  },
+  "document-extraction-1.md.1": {
+    "error": null
+  },
+  "document-extraction-1.md.2": {
+    "error": null
+  },
+  "document-extraction-1.tsv.0": {
+    "error": null
+  },
+  "document-extraction-1.tsv.0.parsed": {
+    "error": null
+  },
+  "document-extraction-1.txt.0": {
+    "error": null
+  },
+  "document-extraction-1.txt.0.parsed": {
+    "error": null
+  },
+  "document-extraction-1.txt.1": {
+    "error": null
+  },
+  "document-extraction-1.txt.1.parsed": {
+    "error": null
+  },
+  "document-extraction-2.hocr.0": {
+    "error": null
+  },
+  "document-extraction-2.hocr.0.parsed": {
+    "error": null
+  },
+  "document-extraction-2.html.0": {
+    "error": null
+  },
+  "document-extraction-2.html.1": {
+    "error": null
+  },
+  "document-extraction-2.html.2": {
+    "error": null
+  },
+  "document-extraction-2.html.3": {
+    "error": null
+  },
+  "document-extraction-2.html.4": {
+    "error": null
+  },
+  "document-extraction-2.html.5": {
+    "error": null
+  },
+  "document-extraction-2.html.6": {
+    "error": null
+  },
+  "document-extraction-2.html.7": {
+    "error": "TypeError",
+    "message": "extract_spatial_pages() got an unexpected keyword argument 'gap_x'"
+  },
+  "document-extraction-2.html.8": {
+    "error": null
+  },
+  "document-extraction-2.md.0": {
+    "error": null
+  },
+  "document-extraction-2.md.1": {
+    "error": null
+  },
+  "document-extraction-2.md.2": {
+    "error": null
+  },
+  "document-extraction-2.tsv.0": {
+    "error": null
+  },
+  "document-extraction-2.tsv.0.parsed": {
+    "error": null
+  },
+  "document-extraction-2.txt.0": {
+    "error": null
+  },
+  "document-extraction-2.txt.0.parsed": {
+    "error": null
+  },
+  "document-extraction-2.txt.1": {
+    "error": null
+  },
+  "document-extraction-2.txt.1.parsed": {
+    "error": null
+  },
+  "document-extraction-3.hocr.0": {
+    "error": null
+  },
+  "document-extraction-3.hocr.0.parsed": {
+    "error": null
+  },
+  "document-extraction-3.html.0": {
+    "error": null
+  },
+  "document-extraction-3.html.1": {
+    "error": null
+  },
+  "document-extraction-3.html.2": {
+    "error": null
+  },
+  "document-extraction-3.html.3": {
+    "error": null
+  },
+  "document-extraction-3.html.4": {
+    "error": null
+  },
+  "document-extraction-3.html.5": {
+    "error": null
+  },
+  "document-extraction-3.html.6": {
+    "error": null
+  },
+  "document-extraction-3.html.7": {
+    "error": "TypeError",
+    "message": "extract_spatial_pages() got an unexpected keyword argument 'gap_x'"
+  },
+  "document-extraction-3.html.8": {
+    "error": null
+  },
+  "document-extraction-3.md.0": {
+    "error": null
+  },
+  "document-extraction-3.md.1": {
+    "error": null
+  },
+  "document-extraction-3.md.2": {
+    "error": null
+  },
+  "document-extraction-3.tsv.0": {
+    "error": null
+  },
+  "document-extraction-3.tsv.0.parsed": {
+    "error": null
+  },
+  "document-extraction-3.txt.0": {
+    "error": null
+  },
+  "document-extraction-3.txt.0.parsed": {
+    "error": null
+  },
+  "document-extraction-3.txt.1": {
+    "error": null
+  },
+  "document-extraction-3.txt.1.parsed": {
+    "error": null
+  },
+  "document-extraction-formulas.hocr.0": {
+    "error": null
+  },
+  "document-extraction-formulas.hocr.0.parsed": {
+    "error": null
+  },
+  "document-extraction-formulas.html.0": {
+    "error": null
+  },
+  "document-extraction-formulas.html.1": {
+    "error": null
+  },
+  "document-extraction-formulas.html.2": {
+    "error": null
+  },
+  "document-extraction-formulas.html.3": {
+    "error": null
+  },
+  "document-extraction-formulas.html.4": {
+    "error": null
+  },
+  "document-extraction-formulas.html.5": {
+    "error": null
+  },
+  "document-extraction-formulas.html.6": {
+    "error": null
+  },
+  "document-extraction-formulas.html.7": {
+    "error": "TypeError",
+    "message": "extract_spatial_pages() got an unexpected keyword argument 'gap_x'"
+  },
+  "document-extraction-formulas.html.8": {
+    "error": null
+  },
+  "document-extraction-formulas.md.0": {
+    "error": null
+  },
+  "document-extraction-formulas.md.1": {
+    "error": null
+  },
+  "document-extraction-formulas.md.2": {
+    "error": null
+  },
+  "document-extraction-formulas.tsv.0": {
+    "error": null
+  },
+  "document-extraction-formulas.tsv.0.parsed": {
+    "error": null
+  },
+  "document-extraction-formulas.txt.0": {
+    "error": null
+  },
+  "document-extraction-formulas.txt.0.parsed": {
+    "error": null
+  },
+  "document-extraction-formulas.txt.1": {
+    "error": null
+  },
+  "document-extraction-formulas.txt.1.parsed": {
+    "error": null
+  },
+  "document-extraction-hostile.hocr.0": {
+    "error": null
+  },
+  "document-extraction-hostile.hocr.0.parsed": {
+    "error": null
+  },
+  "document-extraction-hostile.html.0": {
+    "error": null
+  },
+  "document-extraction-hostile.html.1": {
+    "error": null
+  },
+  "document-extraction-hostile.html.2": {
+    "error": null
+  },
+  "document-extraction-hostile.html.3": {
+    "error": null
+  },
+  "document-extraction-hostile.html.4": {
+    "error": null
+  },
+  "document-extraction-hostile.html.5": {
+    "error": null
+  },
+  "document-extraction-hostile.html.6": {
+    "error": null
+  },
+  "document-extraction-hostile.html.7": {
+    "error": "TypeError",
+    "message": "extract_spatial_pages() got an unexpected keyword argument 'gap_x'"
+  },
+  "document-extraction-hostile.html.8": {
+    "error": null
+  },
+  "document-extraction-hostile.md.0": {
+    "error": null
+  },
+  "document-extraction-hostile.md.1": {
+    "error": null
+  },
+  "document-extraction-hostile.md.2": {
+    "error": null
+  },
+  "document-extraction-hostile.tsv.0": {
+    "error": null
+  },
+  "document-extraction-hostile.tsv.0.parsed": {
+    "error": null
+  },
+  "document-extraction-hostile.txt.0": {
+    "error": null
+  },
+  "document-extraction-hostile.txt.0.parsed": {
+    "error": null
+  },
+  "document-extraction-hostile.txt.1": {
+    "error": null
+  },
+  "document-extraction-hostile.txt.1.parsed": {
+    "error": null
+  },
+  "document-extraction-normalized.hocr.0": {
+    "error": null
+  },
+  "document-extraction-normalized.hocr.0.parsed": {
+    "error": null
+  },
+  "document-extraction-normalized.html.0": {
+    "error": null
+  },
+  "document-extraction-normalized.html.1": {
+    "error": null
+  },
+  "document-extraction-normalized.html.2": {
+    "error": null
+  },
+  "document-extraction-normalized.html.3": {
+    "error": null
+  },
+  "document-extraction-normalized.html.4": {
+    "error": null
+  },
+  "document-extraction-normalized.html.5": {
+    "error": null
+  },
+  "document-extraction-normalized.html.6": {
+    "error": null
+  },
+  "document-extraction-normalized.html.7": {
+    "error": "TypeError",
+    "message": "extract_spatial_pages() got an unexpected keyword argument 'gap_x'"
+  },
+  "document-extraction-normalized.html.8": {
+    "error": null
+  },
+  "document-extraction-normalized.md.0": {
+    "error": null
+  },
+  "document-extraction-normalized.md.1": {
+    "error": null
+  },
+  "document-extraction-normalized.md.2": {
+    "error": null
+  },
+  "document-extraction-normalized.tsv.0": {
+    "error": null
+  },
+  "document-extraction-normalized.tsv.0.parsed": {
+    "error": null
+  },
+  "document-extraction-normalized.txt.0": {
+    "error": null
+  },
+  "document-extraction-normalized.txt.0.parsed": {
+    "error": null
+  },
+  "document-extraction-normalized.txt.1": {
+    "error": null
+  },
+  "document-extraction-normalized.txt.1.parsed": {
+    "error": null
+  },
+  "document-extraction-per-mille.hocr.0": {
+    "error": null
+  },
+  "document-extraction-per-mille.hocr.0.parsed": {
+    "error": null
+  },
+  "document-extraction-per-mille.html.0": {
+    "error": null
+  },
+  "document-extraction-per-mille.html.1": {
+    "error": null
+  },
+  "document-extraction-per-mille.html.2": {
+    "error": null
+  },
+  "document-extraction-per-mille.html.3": {
+    "error": null
+  },
+  "document-extraction-per-mille.html.4": {
+    "error": null
+  },
+  "document-extraction-per-mille.html.5": {
+    "error": null
+  },
+  "document-extraction-per-mille.html.6": {
+    "error": null
+  },
+  "document-extraction-per-mille.html.7": {
+    "error": "TypeError",
+    "message": "extract_spatial_pages() got an unexpected keyword argument 'gap_x'"
+  },
+  "document-extraction-per-mille.html.8": {
+    "error": null
+  },
+  "document-extraction-per-mille.md.0": {
+    "error": null
+  },
+  "document-extraction-per-mille.md.1": {
+    "error": null
+  },
+  "document-extraction-per-mille.md.2": {
+    "error": null
+  },
+  "document-extraction-per-mille.tsv.0": {
+    "error": null
+  },
+  "document-extraction-per-mille.tsv.0.parsed": {
+    "error": null
+  },
+  "document-extraction-per-mille.txt.0": {
+    "error": null
+  },
+  "document-extraction-per-mille.txt.0.parsed": {
+    "error": null
+  },
+  "document-extraction-per-mille.txt.1": {
+    "error": null
+  },
+  "document-extraction-per-mille.txt.1.parsed": {
+    "error": null
+  },
+  "document-extraction-text-only.hocr.0": {
+    "error": null
+  },
+  "document-extraction-text-only.hocr.0.parsed": {
+    "error": null
+  },
+  "document-extraction-text-only.html.0": {
+    "error": null
+  },
+  "document-extraction-text-only.html.1": {
+    "error": null
+  },
+  "document-extraction-text-only.html.2": {
+    "error": null
+  },
+  "document-extraction-text-only.html.3": {
+    "error": null
+  },
+  "document-extraction-text-only.html.4": {
+    "error": null
+  },
+  "document-extraction-text-only.html.5": {
+    "error": null
+  },
+  "document-extraction-text-only.html.6": {
+    "error": null
+  },
+  "document-extraction-text-only.html.7": {
+    "error": "TypeError",
+    "message": "extract_spatial_pages() got an unexpected keyword argument 'gap_x'"
+  },
+  "document-extraction-text-only.html.8": {
+    "error": null
+  },
+  "document-extraction-text-only.md.0": {
+    "error": null
+  },
+  "document-extraction-text-only.md.1": {
+    "error": null
+  },
+  "document-extraction-text-only.md.2": {
+    "error": null
+  },
+  "document-extraction-text-only.tsv.0": {
+    "error": null
+  },
+  "document-extraction-text-only.tsv.0.parsed": {
+    "error": null
+  },
+  "document-extraction-text-only.txt.0": {
+    "error": null
+  },
+  "document-extraction-text-only.txt.0.parsed": {
+    "error": null
+  },
+  "document-extraction-text-only.txt.1": {
+    "error": null
+  },
+  "document-extraction-text-only.txt.1.parsed": {
+    "error": null
+  }
+}

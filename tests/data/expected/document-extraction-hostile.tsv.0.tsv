@@ -1,0 +1,4 @@
+page_number	block_type	x	y	width	height	text
+1	text	10	10	200	20	<script>alert('text')</script> & <b>bold</b>
+1	box	300	300	50	50	
+2	polygon					</div></div><iframe src=javascript:alert(3)>

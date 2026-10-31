@@ -1,0 +1,17 @@
+# Transcription
+
+=HYPERLINK("https://example.invalid","click")
+
++1+1
+
+-2+3+cmd|' /C calc'!A0
+
+@SUM(A1:A2)
+
+'=already quoted
+
+''+twice
+
+-5
+
+plain = fine

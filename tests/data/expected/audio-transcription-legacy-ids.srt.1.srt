@@ -1,0 +1,20 @@
+1
+00:00:00,500 --> 00:00:04,750
+Maria: Welcome back! Today, my guest is the renowned chef, Jean-Pierre.
+
+2
+00:00:05,100 --> 00:00:08,250
+Jean-Pierre: Thank you, it's a pleasure. You know, the secret is simple,
+
+3
+00:00:08,250 --> 00:00:10,900
+Jean-Pierre: c'est une question de respect pour le produit.
+
+4
+00:00:11,000 --> 00:00:11,800
+Maria: [laughter]
+
+5
+00:00:12,000 --> 00:00:14,500
+Jean-Pierre: It's all about respecting the product.
+

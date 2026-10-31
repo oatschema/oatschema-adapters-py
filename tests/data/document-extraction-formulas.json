@@ -1,0 +1,98 @@
+{
+  "producer": "crawler",
+  "extraction_type": "mixed",
+  "unit": "px",
+  "blocks": [
+    {
+      "block_type": "text",
+      "text": "=HYPERLINK(\"https://example.invalid\",\"Open\")",
+      "page_number": 1,
+      "box": {
+        "x": 10,
+        "y": 10,
+        "width": 100,
+        "height": 10
+      }
+    },
+    {
+      "block_type": "text",
+      "text": "+cmd",
+      "page_number": 1,
+      "box": {
+        "x": 10,
+        "y": 30,
+        "width": 100,
+        "height": 10
+      }
+    },
+    {
+      "block_type": "text",
+      "text": "-cmd",
+      "page_number": 1,
+      "box": {
+        "x": 10,
+        "y": 50,
+        "width": 100,
+        "height": 10
+      }
+    },
+    {
+      "block_type": "text",
+      "text": "@cmd",
+      "page_number": 1,
+      "box": {
+        "x": 10,
+        "y": 70,
+        "width": 100,
+        "height": 10
+      }
+    },
+    {
+      "block_type": "text",
+      "text": "\t=tab first",
+      "page_number": 1,
+      "box": {
+        "x": 10,
+        "y": 90,
+        "width": 100,
+        "height": 10
+      }
+    },
+    {
+      "block_type": "text",
+      "text": "\r=carriage return first",
+      "page_number": 1,
+      "box": {
+        "x": 10,
+        "y": 110,
+        "width": 100,
+        "height": 10
+      }
+    },
+    {
+      "block_type": "text",
+      "text": "'@quoted already",
+      "page_number": 1
+    },
+    {
+      "block_type": "text",
+      "text": "-12.5",
+      "page_number": 1
+    },
+    {
+      "block_type": "text",
+      "text": "",
+      "page_number": 1
+    },
+    {
+      "block_type": "box",
+      "page_number": 2,
+      "box": {
+        "x": 0,
+        "y": 0,
+        "width": 50,
+        "height": 50
+      }
+    }
+  ]
+}

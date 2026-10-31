@@ -1,0 +1,10 @@
+{
+  "blocks": [
+    {
+      "block_type": "text",
+      "text": "A Report on Things\n\nBackground\n\nThis paragraph runs over sev-\neral lines and joins the hyph-\nenated words.\n\nLeft column Right column\n\nBelow both\n\n--- Page 2 ---\n\nPage two text without geometry.\n\nPage two line."
+    }
+  ],
+  "extraction_type": "text",
+  "producer": "txt-adapter"
+}

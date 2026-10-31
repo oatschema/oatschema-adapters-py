@@ -1,0 +1,10 @@
+{
+  "blocks": [
+    {
+      "block_type": "text",
+      "text": "<script>alert('text')</script> & <b>bold</b>\n\n--- Page 2 ---\n\n</div></div><iframe src=javascript:alert(3)>"
+    }
+  ],
+  "extraction_type": "text",
+  "producer": "txt-adapter"
+}

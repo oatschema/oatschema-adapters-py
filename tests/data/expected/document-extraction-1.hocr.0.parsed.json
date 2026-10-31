@@ -1,0 +1,115 @@
+{
+  "blocks": [
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "id": "c7a4b0c8-3b1a-4b6f-8c3b-2a7e1a3e4b5c",
+      "page_number": 1,
+      "text": "Annual Report Summary"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 400.0,
+        "width": 250.0,
+        "x": 50.0,
+        "y": 120.0
+      },
+      "id": "d8b5c1d9-4c2b-4c7f-9d4c-3b8f2b4f5c6d",
+      "page_number": 1,
+      "text": "The first column of text begins here, discussing the quarterly earnings and projections for the upcoming fiscal year."
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 400.0,
+        "width": 250.0,
+        "x": 320.0,
+        "y": 120.0
+      },
+      "id": "e9c6d2e0-5d3c-4d8b-a0e5-4c9c3c5c6d7e",
+      "page_number": 1,
+      "text": "The second column contains shareholder information and a summary of the annual general meeting."
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 150.0,
+        "width": 400.0,
+        "x": 100.0,
+        "y": 100.0
+      },
+      "id": "f0d7e3f1-6e4d-4e9a-b1f6-5d0b4d6b7e8f",
+      "page_number": 2,
+      "polygon": [
+        {
+          "x": 100,
+          "y": 100
+        },
+        {
+          "x": 500,
+          "y": 100
+        },
+        {
+          "x": 500,
+          "y": 250
+        },
+        {
+          "x": 350,
+          "y": 250
+        },
+        {
+          "x": 350,
+          "y": 150
+        },
+        {
+          "x": 100,
+          "y": 150
+        }
+      ],
+      "text": "This caption is wrapped around a circular diagram on the page."
+    }
+  ],
+  "extraction_type": "mixed",
+  "page_height": [
+    {
+      "pages": [
+        1
+      ],
+      "value": 1000.0
+    },
+    {
+      "pages": [
+        2
+      ],
+      "value": 1000.0
+    }
+  ],
+  "page_width": [
+    {
+      "pages": [
+        1
+      ],
+      "value": 1000.0
+    },
+    {
+      "pages": [
+        2
+      ],
+      "value": 1000.0
+    }
+  ],
+  "producer": "hocr-adapter",
+  "unit": "px"
+}

@@ -1,0 +1,21 @@
+{
+  "producer": "srt-adapter",
+  "segments": [
+    {
+      "end_time": 61.0,
+      "start_time": 59.999,
+      "text": "Almost a minute in."
+    },
+    {
+      "end_time": 3600.25,
+      "start_time": 3599.999,
+      "text": "Almost an hour in."
+    },
+    {
+      "end_time": 3730.5,
+      "start_time": 3725.25,
+      "text": "Past the hour, with a\ttab."
+    }
+  ],
+  "text": "Almost a minute in. Almost an hour in. Past the hour, with a\ttab."
+}
