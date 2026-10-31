@@ -1,0 +1,17 @@
+A Report on Things
+
+Background
+
+This paragraph runs over sev-
+eral lines and joins the hyph-
+enated words.
+
+Left column Right column
+
+Below both
+
+--- Page 2 ---
+
+Page two text without geometry.
+
+Page two line.

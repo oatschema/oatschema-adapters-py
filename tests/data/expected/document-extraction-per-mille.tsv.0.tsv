@@ -1,0 +1,4 @@
+page_number	block_type	x	y	width	height	text
+1	box	100	50	800	30	Header
+1	box	100	120	800	300	Body text
+2	box	0	0	1000	1000	Second page

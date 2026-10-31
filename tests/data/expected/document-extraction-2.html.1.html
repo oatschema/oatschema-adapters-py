@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Document Extraction</title>
+  <style>
+
+    /* Core Structure (Do not override unless necessary) */
+    .page-container { position: relative; box-sizing: border-box; }
+    .layout-y { display: flex; flex-direction: column; width: 100%; }
+    .layout-x { display: flex; flex-direction: row; width: 100%; align-items: flex-start; }
+    .col { box-sizing: border-box; }
+    .block-text { white-space: pre-wrap; word-break: break-word; }
+    .figure-placeholder { display: flex; align-items: center; justify-content: center; text-transform: uppercase; }
+    .wireframe-box { position: absolute; overflow: hidden; box-sizing: border-box; transition: all 0.15s ease-in-out; }
+    .wireframe-box:hover { z-index: 1000; overflow: visible; height: auto !important; }
+    .document-footer { margin: 4rem auto 2rem auto; max-width: 850px; padding: 2rem 1rem; text-align: center; border-top: 2px solid; }
+
+
+    /* DorsalHub Light Theme */
+    body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background-color: #f8fafc; color: #0f172a; line-height: 1.6; font-size: 14px; margin: 0; }
+    
+    .page-container { background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 0.5rem; box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1); margin: 2rem auto; }
+    .page-flow { max-width: 100%; padding: 2rem; margin: 1rem; }
+    .page-wireframe { margin: 2rem auto; }
+    
+    .page-divider { text-align: center; font-size: 0.875rem; color: #64748b; margin: 2rem 0; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 500; }
+    .block-text { margin: 0 0 1.25rem 0; color: #334155; }
+    .figure-placeholder { background-color: #f8fafc; border: 1px dashed #cbd5e1; color: #64748b; font-size: 0.875rem; letter-spacing: 0.05em; margin-bottom: 1.25rem; min-height: 4rem; border-radius: 0.375rem; }
+    
+    /* Wireframe highlights using sky-500 (#0ea5e9) */
+    .wireframe-box { border: 1px solid rgba(14, 165, 233, 0.4); background-color: rgba(14, 165, 233, 0.05); font-size: 10px; line-height: 1.2; padding: 2px; color: #0369a1; border-radius: 2px; }
+    .wireframe-box:hover { background-color: rgba(255, 255, 255, 0.95); border-color: #0ea5e9; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
+
+    /* Responsive Breakpoints */
+    @media (min-width: 640px) { 
+        .page-flow { padding: 3rem; font-size: 15px; margin: 2rem auto; } 
+    }
+    @media (min-width: 1024px) { 
+        .page-flow { padding: 4rem; font-size: 16px; max-width: 1200px; } 
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="page-container page-flow">
+<div class="figure-placeholder">[box]</div>
+  </div>
+  <div class="page-divider">Page 2</div>
+  <div class="page-container page-flow">
+<div class="figure-placeholder">[multi_polygon]</div>
+  </div>
+</body>
+</html>

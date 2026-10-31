@@ -1,0 +1,68 @@
+{
+  "extraction_type": "mixed",
+  "unit": "pt",
+  "blocks": [
+    {
+      "block_type": "text",
+      "id": "c7a4b0c8-3b1a-4b6f-8c3b-2a7e1a3e4b5c",
+      "text": "Annual Report Summary",
+      "page_number": 1
+    },
+    {
+      "block_type": "box",
+      "id": "d8b5c1d9-4c2b-4c7f-9d4c-3b8f2b4f5c6d",
+      "text": "The first column of text begins here, discussing the quarterly earnings and projections for the upcoming fiscal year.",
+      "page_number": 1,
+      "box": {
+        "x": 50,
+        "y": 120,
+        "width": 250,
+        "height": 400
+      }
+    },
+    {
+      "block_type": "box",
+      "id": "e9c6d2e0-5d3c-4d8b-a0e5-4c9c3c5c6d7e",
+      "text": "The second column contains shareholder information and a summary of the annual general meeting.",
+      "page_number": 1,
+      "box": {
+        "x": 320,
+        "y": 120,
+        "width": 250,
+        "height": 400
+      }
+    },
+    {
+      "block_type": "polygon",
+      "id": "f0d7e3f1-6e4d-4e9a-b1f6-5d0b4d6b7e8f",
+      "text": "This caption is wrapped around a circular diagram on the page.",
+      "page_number": 2,
+      "polygon": [
+        {
+          "x": 100,
+          "y": 100
+        },
+        {
+          "x": 500,
+          "y": 100
+        },
+        {
+          "x": 500,
+          "y": 250
+        },
+        {
+          "x": 350,
+          "y": 250
+        },
+        {
+          "x": 350,
+          "y": 150
+        },
+        {
+          "x": 100,
+          "y": 150
+        }
+      ]
+    }
+  ]
+}

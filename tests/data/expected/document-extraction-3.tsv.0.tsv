@@ -1,0 +1,12 @@
+page_number	block_type	x	y	width	height	text
+1	line	100	50	600	40	A Report on Things
+1	line	100	120	300	24	Background
+1	line	100	160	400	18	This paragraph runs over sev-
+1	line	100	180	400	18	eral lines and joins the hyph-
+1	line	100	200	120	18	enated words.
+1	line	100	300	300	18	Left column
+1	line	550	300	300	18	Right column
+1	line	100	400	300	18	Below both
+1	box	100.5	500.25	400.75	200	
+2	text					Page two text without geometry.
+2	line	120	90	300	20	Page two line.

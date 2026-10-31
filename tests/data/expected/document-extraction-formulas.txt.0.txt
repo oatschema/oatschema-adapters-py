@@ -1,0 +1,7 @@
+=HYPERLINK("https://example.invalid","Open") +cmd -cmd @cmd =tab first =carriage return first
+
+'@quoted already
+
+-12.5
+
+--- Page 2 ---

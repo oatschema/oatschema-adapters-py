@@ -1,0 +1,62 @@
+{
+  "producer": "\"><script>alert('producer')</script>",
+  "extraction_type": "mixed",
+  "unit": "px",
+  "page_width": 800,
+  "page_height": 600,
+  "attributes": {
+    "note": "</style><script>alert(1)</script>"
+  },
+  "blocks": [
+    {
+      "block_type": "text",
+      "id": "\" onmouseover=\"alert('id')",
+      "text": "<script>alert('text')</script> & <b>bold</b>",
+      "page_number": 1,
+      "box": {
+        "x": 10,
+        "y": 10,
+        "width": 200,
+        "height": 20
+      },
+      "score": 0.4,
+      "attributes": {
+        "x\" onclick=\"alert(1)": "v",
+        "visual_class": "\"><img src=x onerror=alert(1)>",
+        "hocr_class": "ocr_line\" onclick=\"alert(2)"
+      }
+    },
+    {
+      "block_type": "box",
+      "page_number": 1,
+      "box": {
+        "x": 300,
+        "y": 300,
+        "width": 50,
+        "height": 50
+      },
+      "attributes": {
+        "q": "'\"<>&"
+      }
+    },
+    {
+      "block_type": "polygon",
+      "text": "</div></div><iframe src=javascript:alert(3)>",
+      "page_number": 2,
+      "polygon": [
+        {
+          "x": 1,
+          "y": 1
+        },
+        {
+          "x": 5,
+          "y": 1
+        },
+        {
+          "x": 3,
+          "y": 4
+        }
+      ]
+    }
+  ]
+}

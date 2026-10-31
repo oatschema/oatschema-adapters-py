@@ -1,0 +1,5 @@
+page_number	block_type	x	y	width	height	text
+1	text					Annual Report Summary
+1	box	50	120	250	400	The first column of text begins here, discussing the quarterly earnings and projections for the upcoming fiscal year.
+1	box	320	120	250	400	The second column contains shareholder information and a summary of the annual general meeting.
+2	polygon					This caption is wrapped around a circular diagram on the page.

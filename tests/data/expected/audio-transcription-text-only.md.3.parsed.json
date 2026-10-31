@@ -1,0 +1,11 @@
+{
+  "producer": "md-adapter",
+  "segments": [
+    {
+      "end_time": 0.0,
+      "start_time": 0.0,
+      "text": "Just a transcript, with no segments."
+    }
+  ],
+  "text": "Just a transcript, with no segments."
+}

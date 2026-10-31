@@ -1,0 +1,21 @@
+---
+producer: =HYPERLINK("https://example.invalid","producer")
+---
+
+# Transcription
+
+**[00:00.000 - 00:01.000]** **+SUM(1,2):** =HYPERLINK("https://example.invalid","click")
+
+**[00:01.000 - 00:02.000]** **@evil:** +1+1
+
+**[00:02.000 - 00:03.000]** **-1:** -2+3+cmd|' /C calc'!A0
+
+**[00:03.000 - 00:04.000]** @SUM(A1:A2)
+
+**[00:04.000 - 00:05.000]** '=already quoted
+
+**[00:05.000 - 00:06.000]** ''+twice
+
+**[00:06.000 - 00:07.000]** -5
+
+**[00:07.000 - 00:08.000]** plain = fine

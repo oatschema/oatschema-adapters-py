@@ -1,0 +1,17 @@
+{
+  "extraction_type": "polygons",
+  "unit": "normalized",
+  "blocks": [
+    {
+      "block_type": "multi_polygon",
+      "id": "bad-norm-block",
+      "multi_polygon": [
+        [
+          {"x": 0.5, "y": 0.5},
+          {"x": 1.5, "y": 0.5},
+          {"x": 0.5, "y": 0.9}
+        ]
+      ]
+    }
+  ]
+}

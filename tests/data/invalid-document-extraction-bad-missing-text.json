@@ -1,0 +1,10 @@
+{
+  "extraction_type": "text",
+  "blocks": [
+    {
+      "block_type": "text",
+      "id": "missing-text-block",
+      "page_number": 1
+    }
+  ]
+}

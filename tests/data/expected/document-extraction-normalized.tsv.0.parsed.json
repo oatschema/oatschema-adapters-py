@@ -1,0 +1,45 @@
+{
+  "blocks": [
+    {
+      "block_type": "box",
+      "box": {
+        "height": 0.02,
+        "width": 0.4,
+        "x": 0.1,
+        "y": 0.05
+      },
+      "page_number": 1,
+      "text": "Top left"
+    },
+    {
+      "block_type": "box",
+      "box": {
+        "height": 0.02,
+        "width": 0.4,
+        "x": 0.1,
+        "y": 0.072
+      },
+      "page_number": 1,
+      "text": "Next line"
+    },
+    {
+      "block_type": "box",
+      "box": {
+        "height": 0.1,
+        "width": 0.8,
+        "x": 0.1,
+        "y": 0.5
+      },
+      "page_number": 1,
+      "text": "Far below"
+    },
+    {
+      "block_type": "polygon",
+      "page_number": 1,
+      "text": "A shape"
+    }
+  ],
+  "extraction_type": "mixed",
+  "producer": "tsv-adapter",
+  "unit": "px"
+}

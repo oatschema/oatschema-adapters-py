@@ -1,0 +1,79 @@
+# SPDX-FileCopyrightText: 2026 The OATS Authors
+# SPDX-License-Identifier: Apache-2.0
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.14"
+      - run: uv sync --locked
+      - run: uv run ruff check .
+      - run: uv run ruff format --check .
+      - run: uv run mypy src tests scripts
+
+  test:
+    needs: lint
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.11", "3.12", "3.13", "3.14"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: ${{ matrix.python }}
+      - run: uv sync --locked
+      - run: uv run pytest -q -rs --cov --cov-report=xml
+      - uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: oatschema/oatschema-adapters-py
+          files: coverage.xml
+          flags: ${{ matrix.os }}-py${{ matrix.python }}
+          fail_ci_if_error: true
+
+  lowest:
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.11"
+      - run: uv sync --resolution lowest-direct
+      - run: uv run --no-sync python -c "import importlib.metadata as m; print(*(f'{d} {m.version(d)}' for d in ('oatschema', 'jsonschema-rs', 'srt', 'webvtt-py')), sep='\n')"
+      - run: uv run --no-sync pytest -q -rs
+
+  ci-success:
+    needs: [lint, test, lowest]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check that every job passed
+        run: |
+          if [[ "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') || contains(needs.*.result, 'skipped') }}" == "true" ]]; then
+            echo "One or more jobs did not pass."
+            exit 1
+          fi
+          echo "All checks passed."

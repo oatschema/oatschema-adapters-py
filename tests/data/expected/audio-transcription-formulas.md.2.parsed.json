@@ -1,0 +1,46 @@
+{
+  "producer": "md-adapter",
+  "segments": [
+    {
+      "end_time": 0.0,
+      "start_time": 0.0,
+      "text": "=HYPERLINK(\"https://example.invalid\",\"click\")"
+    },
+    {
+      "end_time": 0.0,
+      "start_time": 0.0,
+      "text": "+1+1"
+    },
+    {
+      "end_time": 0.0,
+      "start_time": 0.0,
+      "text": "-2+3+cmd|' /C calc'!A0"
+    },
+    {
+      "end_time": 0.0,
+      "start_time": 0.0,
+      "text": "@SUM(A1:A2)"
+    },
+    {
+      "end_time": 0.0,
+      "start_time": 0.0,
+      "text": "'=already quoted"
+    },
+    {
+      "end_time": 0.0,
+      "start_time": 0.0,
+      "text": "''+twice"
+    },
+    {
+      "end_time": 0.0,
+      "start_time": 0.0,
+      "text": "-5"
+    },
+    {
+      "end_time": 0.0,
+      "start_time": 0.0,
+      "text": "plain = fine"
+    }
+  ],
+  "text": "=HYPERLINK(\"https://example.invalid\",\"click\") +1+1 -2+3+cmd|' /C calc'!A0 @SUM(A1:A2) '=already quoted ''+twice -5 plain = fine"
+}

@@ -1,0 +1,40 @@
+{
+  "blocks": [
+    {
+      "block_type": "box",
+      "box": {
+        "height": 30.0,
+        "width": 800.0,
+        "x": 100.0,
+        "y": 50.0
+      },
+      "page_number": 1,
+      "text": "Header"
+    },
+    {
+      "block_type": "box",
+      "box": {
+        "height": 300.0,
+        "width": 800.0,
+        "x": 100.0,
+        "y": 120.0
+      },
+      "page_number": 1,
+      "text": "Body text"
+    },
+    {
+      "block_type": "box",
+      "box": {
+        "height": 1000.0,
+        "width": 1000.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "page_number": 2,
+      "text": "Second page"
+    }
+  ],
+  "extraction_type": "mixed",
+  "producer": "tsv-adapter",
+  "unit": "px"
+}

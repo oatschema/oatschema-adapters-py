@@ -1,0 +1,5 @@
+<script>alert('text')</script> & <b>bold</b>
+
+--- Page 2 ---
+
+</div></div><iframe src=javascript:alert(3)>

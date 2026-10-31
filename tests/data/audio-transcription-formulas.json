@@ -1,0 +1,60 @@
+{
+  "producer": "=HYPERLINK(\"https://example.invalid\",\"producer\")",
+  "segments": [
+    {
+      "text": "=HYPERLINK(\"https://example.invalid\",\"click\")",
+      "start_time": 0.0,
+      "end_time": 1.0,
+      "speaker": {
+        "id": "x",
+        "name": "+SUM(1,2)"
+      }
+    },
+    {
+      "text": "+1+1",
+      "start_time": 1.0,
+      "end_time": 2.0,
+      "speaker": {
+        "id": "y",
+        "name": "@evil"
+      }
+    },
+    {
+      "text": "-2+3+cmd|' /C calc'!A0",
+      "start_time": 2.0,
+      "end_time": 3.0,
+      "speaker": {
+        "id": "z",
+        "name": "-1"
+      }
+    },
+    {
+      "text": "@SUM(A1:A2)",
+      "start_time": 3.0,
+      "end_time": 4.0
+    },
+    {
+      "text": "'=already quoted",
+      "start_time": 4.0,
+      "end_time": 5.0
+    },
+    {
+      "text": "''+twice",
+      "start_time": 5.0,
+      "end_time": 6.0
+    },
+    {
+      "text": "-5",
+      "start_time": 6.0,
+      "end_time": 7.0
+    },
+    {
+      "text": "plain = fine",
+      "start_time": 7.0,
+      "end_time": 8.0,
+      "speaker": {
+        "id": "w"
+      }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "blocks": [
+    {
+      "block_type": "text",
+      "text": "=HYPERLINK(\"https://example.invalid\",\"Open\") +cmd -cmd @cmd =tab first =carriage return first\n\n'@quoted already\n\n-12.5\n\n--- Page 2 ---"
+    }
+  ],
+  "extraction_type": "text",
+  "producer": "txt-adapter"
+}

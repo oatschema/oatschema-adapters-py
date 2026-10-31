@@ -1,0 +1,34 @@
+{
+  "blocks": [
+    {
+      "block_type": "text",
+      "box": {
+        "height": 20.0,
+        "width": 200.0,
+        "x": 10.0,
+        "y": 10.0
+      },
+      "page_number": 1,
+      "text": "<script>alert('text')</script> & <b>bold</b>"
+    },
+    {
+      "block_type": "box",
+      "box": {
+        "height": 50.0,
+        "width": 50.0,
+        "x": 300.0,
+        "y": 300.0
+      },
+      "page_number": 1,
+      "text": ""
+    },
+    {
+      "block_type": "polygon",
+      "page_number": 2,
+      "text": "</div></div><iframe src=javascript:alert(3)>"
+    }
+  ],
+  "extraction_type": "mixed",
+  "producer": "tsv-adapter",
+  "unit": "px"
+}

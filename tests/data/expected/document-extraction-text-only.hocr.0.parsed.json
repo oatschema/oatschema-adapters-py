@@ -1,0 +1,31 @@
+{
+  "blocks": [
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "page_number": 1,
+      "text": "One block of text. With two paragraphs."
+    }
+  ],
+  "extraction_type": "mixed",
+  "page_height": [
+    {
+      "pages": [
+        1
+      ],
+      "value": 1000.0
+    }
+  ],
+  "page_width": [
+    {
+      "pages": [
+        1
+      ],
+      "value": 1000.0
+    }
+  ],
+  "producer": "hocr-adapter",
+  "unit": "px"
+}

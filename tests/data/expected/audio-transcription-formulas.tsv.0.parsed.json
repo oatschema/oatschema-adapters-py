@@ -1,0 +1,46 @@
+{
+  "producer": "tsv-adapter",
+  "segments": [
+    {
+      "end_time": 1.0,
+      "start_time": 0.0,
+      "text": "=HYPERLINK(\"https://example.invalid\",\"click\")"
+    },
+    {
+      "end_time": 2.0,
+      "start_time": 1.0,
+      "text": "+1+1"
+    },
+    {
+      "end_time": 3.0,
+      "start_time": 2.0,
+      "text": "-2+3+cmd|' /C calc'!A0"
+    },
+    {
+      "end_time": 4.0,
+      "start_time": 3.0,
+      "text": "@SUM(A1:A2)"
+    },
+    {
+      "end_time": 5.0,
+      "start_time": 4.0,
+      "text": "'=already quoted"
+    },
+    {
+      "end_time": 6.0,
+      "start_time": 5.0,
+      "text": "''+twice"
+    },
+    {
+      "end_time": 7.0,
+      "start_time": 6.0,
+      "text": "-5"
+    },
+    {
+      "end_time": 8.0,
+      "start_time": 7.0,
+      "text": "plain = fine"
+    }
+  ],
+  "text": "=HYPERLINK(\"https://example.invalid\",\"click\") +1+1 -2+3+cmd|' /C calc'!A0 @SUM(A1:A2) '=already quoted ''+twice -5 plain = fine"
+}

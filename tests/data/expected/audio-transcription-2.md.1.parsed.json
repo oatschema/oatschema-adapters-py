@@ -1,0 +1,30 @@
+{
+  "producer": "md-adapter",
+  "segments": [
+    {
+      "end_time": 0.0,
+      "start_time": 0.0,
+      "text": "[00:60.000 - 01:01.000] Ada: Almost a minute in."
+    },
+    {
+      "end_time": 0.0,
+      "events": [
+        "applause",
+        "music"
+      ],
+      "start_time": 0.0,
+      "text": ""
+    },
+    {
+      "end_time": 0.0,
+      "start_time": 0.0,
+      "text": "[59:60.000 - 01:00:00.250] Almost an hour in."
+    },
+    {
+      "end_time": 0.0,
+      "start_time": 0.0,
+      "text": "[01:02:05.250 - 01:02:10.500] Ada: Past the hour, with a\ttab."
+    }
+  ],
+  "text": "[00:60.000 - 01:01.000] Ada: Almost a minute in. [59:60.000 - 01:00:00.250] Almost an hour in. [01:02:05.250 - 01:02:10.500] Ada: Past the hour, with a\ttab."
+}

@@ -1,0 +1,10 @@
+{
+  "blocks": [
+    {
+      "block_type": "text",
+      "text": "Header\n\nBody text\n\n--- Page 2 ---\n\nSecond page"
+    }
+  ],
+  "extraction_type": "text",
+  "producer": "txt-adapter"
+}

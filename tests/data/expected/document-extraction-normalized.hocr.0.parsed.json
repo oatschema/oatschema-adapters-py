@@ -1,0 +1,94 @@
+{
+  "blocks": [
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 0.0,
+        "width": 0.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "page_number": 1,
+      "text": "Top left"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 0.0,
+        "width": 0.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "page_number": 1,
+      "text": "Next line"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 0.0,
+        "width": 0.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "page_number": 1,
+      "score": 0.88,
+      "text": "Far below"
+    },
+    {
+      "attributes": {
+        "hocr_class": "ocr_line"
+      },
+      "block_type": "text",
+      "box": {
+        "height": 0.0,
+        "width": 0.0,
+        "x": 0.0,
+        "y": 0.0
+      },
+      "page_number": 1,
+      "polygon": [
+        {
+          "x": 0.2,
+          "y": 0.7
+        },
+        {
+          "x": 0.6,
+          "y": 0.7
+        },
+        {
+          "x": 0.4,
+          "y": 0.9
+        }
+      ],
+      "text": "A shape"
+    }
+  ],
+  "extraction_type": "mixed",
+  "page_height": [
+    {
+      "pages": [
+        1
+      ],
+      "value": 792.0
+    }
+  ],
+  "page_width": [
+    {
+      "pages": [
+        1
+      ],
+      "value": 612.0
+    }
+  ],
+  "producer": "hocr-adapter",
+  "unit": "px"
+}

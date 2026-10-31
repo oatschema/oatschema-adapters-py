@@ -1,0 +1,34 @@
+{
+  "blocks": [],
+  "extraction_type": "mixed",
+  "page_height": [
+    {
+      "pages": [
+        1
+      ],
+      "value": 1100.0
+    },
+    {
+      "pages": [
+        2
+      ],
+      "value": 1100.0
+    }
+  ],
+  "page_width": [
+    {
+      "pages": [
+        1
+      ],
+      "value": 850.0
+    },
+    {
+      "pages": [
+        2
+      ],
+      "value": 1100.0
+    }
+  ],
+  "producer": "hocr-adapter",
+  "unit": "px"
+}
