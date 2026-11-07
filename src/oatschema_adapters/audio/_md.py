@@ -14,7 +14,7 @@ from oatschema_adapters.audio._time import parse_clock, split_milliseconds
 _FRONTMATTER_KEYS = ("producer", "language", "duration", "score_explanation", "track_id")
 _FRONTMATTER = re.compile(r"^---\n(.*?)\n---(?:\n|$)", re.DOTALL)
 _SEGMENT = re.compile(r"^\*\*\[([\d:.]+)\s*-\s*([\d:.]+)\]\*\*(?:\s*\*\*([^:]+):\*\*)?\s+(.*)", re.IGNORECASE)
-_TIMED = re.compile(r"^\*\*\[[^\]]* - [^\]]*\]\*\*")
+_TIMED = re.compile(r"^\*\*\[([^\]]*+)\]\*\*")
 _EVENTS = re.compile(r"^\*\[(.*)\]\*$")
 
 
@@ -181,7 +181,7 @@ def from_md(
                 segment["speaker"] = {"id": speaker.strip(), "name": speaker.strip()}
             add(segment)
             texts.append(text.strip())
-        elif _TIMED.match(line):
+        elif (timed := _TIMED.match(line)) and " - " in timed.group(1):
             raise ValueError(f"not a time: {shorten(line)}")
         else:
             text = line.replace("**", "").strip()

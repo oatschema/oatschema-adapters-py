@@ -15,7 +15,7 @@ from typing import Any
 import oatschema
 import pytest
 
-from oatschema_adapters import get_adapter
+from oatschema_adapters import ParsedRecord, get_adapter
 
 AUDIO = "audio-transcription"
 DOCUMENT = "document-extraction"
@@ -174,6 +174,15 @@ def test_hocr_depth_is_capped_before_it_costs_time() -> None:
     started = time.monotonic()
     with pytest.raises(ValueError, match="more than 100,000 elements open"):
         get_adapter(DOCUMENT, "hocr").parse(deep)
+    assert time.monotonic() - started < 30
+
+
+@pytest.mark.parametrize(
+    "content", ["**[" + "a - " * 500_000, "**[" + "a - " * 500_000 + "]*", "**[" + " - " * 500_000 + "]"]
+)
+def test_markdown_takes_linear_time_on_hostile_lines(content: str) -> None:
+    started = time.monotonic()
+    get_adapter(AUDIO, "md").parse(content, validate=False)
     assert time.monotonic() - started < 30
 
 
@@ -411,13 +420,80 @@ def test_a_large_invalid_record_is_rejected_without_repair(content: str) -> None
     assert peak < 300 * 1024 * 1024
 
 
-def test_a_large_record_with_a_bad_number_is_rejected_and_a_valid_one_is_not() -> None:
+def test_a_large_record_with_a_bad_number_drops_it_and_a_valid_one_is_kept() -> None:
     blocks = [{"block_type": "text", "text": "a", "page_number": 1} for _ in range(90_000)]
     record = {"extraction_type": "text", "blocks": blocks}
     blocks[-1]["score"] = 1.5
-    with pytest.raises(oatschema.ValidationError, match="too many to say where") as caught:
-        get_adapter(DOCUMENT, "json").parse(json.dumps(record))
-    assert caught.value.schema_name == DOCUMENT
-    assert caught.value.schema_version == oatschema.SCHEMA_VERSION
+    with pytest.warns(oatschema.DroppedNumberWarning, match="/blocks/89999/score"):
+        parsed = get_adapter(DOCUMENT, "json").parse(json.dumps(record))
+    assert isinstance(parsed, ParsedRecord)
+    assert [item.path for item in parsed.dropped] == [("blocks", 89_999, "score")]
+    assert "score" not in parsed["blocks"][-1]
+    assert len(parsed["blocks"]) == 90_000
     blocks[-1]["score"] = 0.5
     assert get_adapter(DOCUMENT, "json").parse(json.dumps(record))["blocks"][-1]["score"] == 0.5
+
+
+def test_large_word_level_hocr_drops_a_bad_score() -> None:
+    words = "".join(
+        f"<span class='ocrx_word' title='bbox {i % 900} {i // 900} {i % 900 + 1} {i // 900 + 1}; "
+        f"x_wconf {150 if i == 25_000 else 90}'>w{i}</span>"
+        for i in range(30_000)
+    )
+    content = f"<div class='ocr_page' title='bbox 0 0 1000 1000'>{words}</div>"
+    with pytest.warns(oatschema.DroppedNumberWarning):
+        parsed = get_adapter(DOCUMENT, "hocr").parse(content, target_class="ocrx_word")
+    assert isinstance(parsed, ParsedRecord)
+    assert [item.path for item in parsed.dropped] == [("blocks", 25_000, "score")]
+    assert len(parsed["blocks"]) == 30_000
+
+
+def _small_cap(monkeypatch: pytest.MonkeyPatch) -> None:
+    from oatschema_adapters import _validation
+
+    monkeypatch.setattr(_validation, "MAX_VALUES_TO_REPAIR", 60)
+
+
+def test_grouped_checks_report_the_whole_records_paths(monkeypatch: pytest.MonkeyPatch) -> None:
+    _small_cap(monkeypatch)
+    segments = [{"text": "x", "start_time": i, "end_time": i + 1, "score": 0.5} for i in range(40)]
+    segments[3]["score"] = 1.5
+    segments[37]["score"] = -0.0
+    segments[38]["speaker"] = {"id": "a", "name": "A", "score": 2}
+    record = {"producer": "p", "duration": -0.0, "segments": segments}
+    with pytest.warns(oatschema.DroppedNumberWarning, match="dropped 2 .*/segments/3/score"):
+        parsed = get_adapter(AUDIO, "json").parse(json.dumps(record))
+    assert isinstance(parsed, ParsedRecord)
+    assert [item.path for item in parsed.dropped] == [("segments", 3, "score"), ("segments", 38, "speaker", "score")]
+    assert sorted(item.path for item in parsed.converted) == [("duration",), ("segments", 37, "score")]
+    assert list(parsed) == ["producer", "duration", "segments"]
+    assert len(parsed["segments"]) == 40
+
+
+def test_grouped_checks_give_the_index_of_an_invalid_item(monkeypatch: pytest.MonkeyPatch) -> None:
+    _small_cap(monkeypatch)
+    segments = [{"text": "x", "start_time": i, "end_time": i + 1, "score": 1.5} for i in range(40)]
+    segments[33]["text"] = 5
+    with pytest.raises(oatschema.ValidationError) as caught:
+        get_adapter(AUDIO, "json").parse(json.dumps({"producer": "p", "segments": segments}))
+    assert caught.value.path == ("segments", 33, "text")
+
+
+def test_grouped_checks_still_see_rules_across_items(monkeypatch: pytest.MonkeyPatch) -> None:
+    _small_cap(monkeypatch)
+    blocks = [{"block_type": "text", "text": "a", "score": 1.5} for _ in range(30)]
+    blocks[25] = {"block_type": "box", "box": {"x": 0, "y": 0, "width": 1, "height": 1}}
+    with pytest.raises(oatschema.ValidationError):
+        get_adapter(DOCUMENT, "json").parse(json.dumps({"extraction_type": "mixed", "blocks": blocks}))
+
+
+def test_a_single_item_too_large_to_check_is_rejected_without_repair(monkeypatch: pytest.MonkeyPatch) -> None:
+    _small_cap(monkeypatch)
+    polygon = [{"x": i, "y": 0} for i in range(40)]
+    record = {
+        "extraction_type": "mixed",
+        "unit": "px",
+        "blocks": [{"block_type": "polygon", "polygon": polygon, "score": 2}],
+    }
+    with pytest.raises(oatschema.ValidationError, match="too many to say where"):
+        get_adapter(DOCUMENT, "json").parse(json.dumps(record))
