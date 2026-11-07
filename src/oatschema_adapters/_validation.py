@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2026 The OATS Authors
 # SPDX-License-Identifier: Apache-2.0
 
+import re
 import warnings
 from typing import Any, Literal
 
@@ -11,6 +12,7 @@ from oatschema_adapters._parsed import ParsedRecord
 MAX_VALUES_TO_REPAIR = 250_000
 _ITEMS = {"audio-transcription": "segments", "document-extraction": "blocks"}
 _REPORTED_DROPS = 5
+_AFTER_DROPPING = ", after dropping bad numbers at "
 
 
 def check_record(record: Any, name: SchemaName, *, validate: bool, version: str | None) -> dict[str, Any]:
@@ -85,7 +87,15 @@ def _groups(items: list[Any], limit: int) -> list[tuple[int, list[Any]]]:
 
 
 def _pointer(path: tuple[Any, ...]) -> str:
-    return "/" + "/".join(str(part).replace("~", "~0").replace("/", "~1") for part in path)
+    return "/" + "/".join(str(part) for part in path)
+
+
+def _moved_message(message: str, key: str, start: int) -> str:
+    head, found, tail = message.rpartition(_AFTER_DROPPING)
+    if not found or not start:
+        return message
+    item = re.compile(rf"(^|, )/{re.escape(key)}/([0-9]+)(?=[/ ,]|$)")
+    return head + found + item.sub(lambda match: f"{match.group(1)}/{key}/{int(match.group(2)) + start}", tail)
 
 
 def _moved(path: tuple[Any, ...], key: str, start: int) -> tuple[Any, ...]:
@@ -108,9 +118,10 @@ def _check_in_groups(
     if key is None or not isinstance(items, list) or not items:
         raise _too_large(name, version)
     rest = {field: value for field, value in record.items() if field != key}
-    rest_limit = MAX_VALUES_TO_REPAIR - _count_values(rest, MAX_VALUES_TO_REPAIR)
-    if rest_limit <= 0:
+    rest_values = _count_values(rest, MAX_VALUES_TO_REPAIR)
+    if rest_values > MAX_VALUES_TO_REPAIR // 2:
         raise _too_large(name, version)
+    rest_limit = MAX_VALUES_TO_REPAIR - rest_values
     dropped: list[Any] = []
     converted: list[Any] = []
     kept: list[Any] = []
@@ -123,17 +134,11 @@ def _check_in_groups(
                 warnings.simplefilter("ignore", oatschema.DroppedNumberWarning)
                 checked = oatschema.check_numbers({**rest, key: group}, name, version, on_bad_number=on_bad_number)
         except oatschema.ValidationError as error:
-            path = _moved(error.path, key, start)
-            message = (
-                error.message.replace(f"/{key}/{error.path[1]}/", f"/{key}/{path[1]}/")
-                if path != error.path
-                else error.message
-            )
             raise oatschema.ValidationError(
-                message,
+                _moved_message(error.message, key, start),
                 schema_name=error.schema_name,
                 schema_version=error.schema_version,
-                path=path,
+                path=_moved(error.path, key, start),
                 schema_path=error.schema_path,
             ) from None
         rest = {field: value for field, value in checked.record.items() if field != key}
@@ -166,9 +171,11 @@ def finish_parse(
     """Return a parsed ``record``, after ``oatschema.check_numbers`` unless ``validate`` is false.
 
     An invalid ``audio-transcription`` or ``document-extraction`` record with more than 250,000 values is checked in
-    groups of segments or blocks of up to 250,000 values each, because checking it whole can take gigabytes. A segment
-    or block with more than 250,000 values, an invalid record of another schema that large, or one whose groups are
-    each valid but whose whole isn't, is rejected without saying where it is invalid, and no number is dropped from it.
+    groups of segments or blocks, each with the rest of the record and up to 250,000 values in all, because checking
+    it whole can take gigabytes. It is rejected without saying where it is invalid, and no number is dropped from it,
+    if it has no segments or blocks, if the rest of the record has more than 125,000 values, if a segment or block
+    with the rest has more than 250,000, or if its groups are each valid but the whole isn't. So is an invalid record
+    of another schema with more than 250,000 values.
 
     Raises:
         oatschema.ValidationError: the record doesn't conform, or has a number ``check_numbers`` rejects.

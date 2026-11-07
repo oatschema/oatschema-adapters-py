@@ -479,6 +479,36 @@ def test_grouped_checks_give_the_index_of_an_invalid_item(monkeypatch: pytest.Mo
     assert caught.value.path == ("segments", 33, "text")
 
 
+def test_grouped_checks_give_whole_record_paths_in_the_message(monkeypatch: pytest.MonkeyPatch) -> None:
+    _small_cap(monkeypatch)
+    segments = [{"text": "x", "start_time": i, "end_time": i + 1} for i in range(40)]
+    segments[31]["score"] = 1.5
+    segments[33]["start_time"] = -1
+    with pytest.raises(oatschema.ValidationError) as caught:
+        get_adapter(AUDIO, "json").parse(json.dumps({"producer": "p", "segments": segments}))
+    assert caught.value.path == ("segments", 33)
+    assert "/segments/31/score, /segments/33/start_time" in caught.value.message
+
+
+def test_a_large_rest_of_the_record_is_rejected_without_checking_each_item(monkeypatch: pytest.MonkeyPatch) -> None:
+    _small_cap(monkeypatch)
+    blocks: list[dict[str, Any]] = [{"block_type": "text", "text": "a"} for _ in range(30)]
+    blocks[-1]["score"] = 1.5
+    record = {"extraction_type": "text", "page_width": [{"value": 1, "pages": list(range(1, 30))}], "blocks": blocks}
+    calls = 0
+    check_numbers = oatschema.check_numbers
+
+    def counting(*args: Any, **kwargs: Any) -> Any:
+        nonlocal calls
+        calls += 1
+        return check_numbers(*args, **kwargs)
+
+    monkeypatch.setattr(oatschema, "check_numbers", counting)
+    with pytest.raises(oatschema.ValidationError, match="too many to say where"):
+        get_adapter(DOCUMENT, "json").parse(json.dumps(record))
+    assert calls == 0
+
+
 def test_grouped_checks_still_see_rules_across_items(monkeypatch: pytest.MonkeyPatch) -> None:
     _small_cap(monkeypatch)
     blocks = [{"block_type": "text", "text": "a", "score": 1.5} for _ in range(30)]

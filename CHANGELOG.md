@@ -33,7 +33,7 @@
 ### Fixed
 
 - `to_tsv` then `from_tsv` is lossless for `polygon` and `multi_polygon` blocks.
-- A small hostile hOCR, TSV, SRT, JSON or `.gz` file can no longer take unbounded time or memory. An invalid audio or document record with more than 250,000 values is checked a group of segments or blocks at a time, so its bad numbers are still dropped and reported. A segment or block that large, or an invalid record of another schema that large, is rejected without dropping anything, and without saying where it is invalid.
+- A small hostile hOCR, TSV, SRT, JSON or `.gz` file can no longer take unbounded time or memory. An invalid audio or document record with more than 250,000 values is checked a group of segments or blocks at a time, so its bad numbers are still dropped and reported. One with no segments or blocks, with more than 125,000 values outside them, or with a segment or block too large to check with them, and an invalid record of another schema that large, is rejected without dropping anything, and without saying where it is invalid.
 - hOCR widths, heights and scores are computed exactly, then stored as the nearest double: `bbox 0.1 0.2 0.3 0.4` gives a width of 0.2. SRT, WebVTT and Markdown times are computed exactly, and a time a double can't hold is refused.
 
 ## 0.1.0 (2026-10-31)
