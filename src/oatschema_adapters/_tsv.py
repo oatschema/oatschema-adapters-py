@@ -4,7 +4,6 @@
 import csv
 import io
 import re
-import threading
 from collections.abc import Iterable
 
 from oatschema_adapters._numbers import MAX_ITEMS
@@ -14,8 +13,8 @@ _TRIGGERS = ("=", "+", "-", "@", "\t", "\r")
 _NUMBER = re.compile(r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?", re.ASCII)
 _ESCAPED = re.compile(r"'+[=+\-@\t\r]")
 _MAX_COLUMNS = 256
-_MAX_CELL = 16 * 1024 * 1024
-_FIELD_LIMIT_LOCK = threading.Lock()
+_CELL = r'(?:"(?:[^"]++|"")*+(?:"|\Z))?[^\t\r\n]*+'
+_RECORD = re.compile(rf"[\r\n]*+{_CELL}(?:\t{_CELL}){{0,{_MAX_COLUMNS - 1}}}+")
 
 
 def neutralise(cell: object) -> str:
@@ -47,15 +46,29 @@ def write(header: list[str], rows: Iterable[list[object]]) -> str:
     return output.getvalue()
 
 
+def _has_a_wide_row(lines: str) -> bool:
+    position = 0
+    for _ in range(MAX_ITEMS + 2):
+        match = _RECORD.match(lines, position)
+        if match is None:
+            return False
+        position = match.end()
+        if position >= len(lines):
+            return False
+        if lines[position] == "\t":
+            return True
+    return False
+
+
 def read(content: str, columns: Iterable[str]) -> tuple[list[str], list[dict[str, str]]]:
     """Return the header of a TSV table, and its rows as the named ``columns``, with cells passed through ``restore``.
 
     Blank lines before the header and after the last row are ignored; a last row ending in empty cells keeps them.
-    Other columns, and cells past the end of the header, are ignored.
+    Other columns, and cells past the end of the header, are ignored. Cells are limited by ``csv.field_size_limit``.
 
     Raises:
-        ValueError: The content is empty, isn't a table, has more than 256 columns, 100,000 rows or a cell over
-            16 MiB, or names one of ``columns`` twice.
+        ValueError: The content is empty, isn't a table, has a row of more than 256 cells, more than 100,000 rows or
+            a cell over ``csv.field_size_limit``, or names one of ``columns`` twice.
     """
     lines = content.lstrip("\r\n").rstrip("\r\n")
     if not lines.strip():
@@ -65,26 +78,22 @@ def read(content: str, columns: Iterable[str]) -> tuple[list[str], list[dict[str
     positions: list[tuple[str, int]] = []
     rows: list[dict[str, str]] = []
     problem = None
-    with _FIELD_LIMIT_LOCK:
-        previous = csv.field_size_limit(_MAX_CELL)
-        try:
-            for number, row in enumerate(csv.reader(io.StringIO(lines, newline=""), delimiter="\t")):
-                if number == 0:
-                    header = row
-                    if len(header) > _MAX_COLUMNS:
-                        raise ValueError(f"A TSV table can have at most {_MAX_COLUMNS} columns, not {len(header)}.")
-                    named = [name for name in header if name in wanted]
-                    if len(named) != len(set(named)):
-                        raise ValueError("A TSV table names a column twice.")
-                    positions = [(name, index) for index, name in enumerate(header) if name in wanted]
-                elif row:
-                    if len(rows) >= MAX_ITEMS:
-                        raise ValueError(f"A TSV table can have at most {MAX_ITEMS} rows.")
-                    rows.append({name: restore(row[index]) if index < len(row) else "" for name, index in positions})
-        except csv.Error as error:
-            problem = str(error)
-        finally:
-            csv.field_size_limit(previous)
+    if _has_a_wide_row(lines):
+        raise ValueError(f"A TSV table can have at most {_MAX_COLUMNS} cells in a row.")
+    try:
+        for number, row in enumerate(csv.reader(io.StringIO(lines, newline=""), delimiter="\t")):
+            if number == 0:
+                header = row
+                named = [name for name in header if name in wanted]
+                if len(named) != len(set(named)):
+                    raise ValueError("A TSV table names a column twice.")
+                positions = [(name, index) for index, name in enumerate(header) if name in wanted]
+            elif row:
+                if len(rows) >= MAX_ITEMS:
+                    raise ValueError(f"A TSV table can have at most {MAX_ITEMS} rows.")
+                rows.append({name: restore(row[index]) if index < len(row) else "" for name, index in positions})
+    except csv.Error as error:
+        problem = str(error)
     if problem:
         raise ValueError(f"Failed to read the TSV table: {problem}")
     return header, rows

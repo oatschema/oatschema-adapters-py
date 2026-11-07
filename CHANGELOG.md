@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 (2026-11-06)
+## 0.2.0 (2026-11-07)
 
 **Pin:** `oatschema-adapters>=0.2,<0.3`. It needs `oatschema[validate]>=0.9.0.0,<0.10`, `webvtt-py>=0.6.0` and Python 3.11 or later.
 
@@ -11,15 +11,15 @@
 - Parsers run `oatschema.check_numbers`. A bad number in an optional property, such as an hOCR `x_wconf` of 150, is now dropped and reported instead of failing validation. Pass `on_bad_number="raise"` to reject the record.
 - Parsers refuse, with `ValueError`, numbers a double can't hold without rounding (`nan`, `inf`, `1e400`, `1e-400`, `1.00000000000000001`), with or without `validate`.
 - Document TSV and hOCR raise `ValueError` for a box, score or polygon that isn't a number or valid JSON, and document TSV for a page number that isn't a whole number. hOCR also raises for a repeated or incomplete `bbox` or `x_wconf`, and for two sizes for one page. They used to ignore these.
-- `from_vtt` raises `ValueError` for a line with `-->` that isn't a timing it can read, and for a block with no timing, other than the header and `NOTE`, `STYLE` and `REGION` blocks. These used to vanish. `from_md` raises for a line whose time isn't one, which used to become text.
+- `from_vtt` raises `ValueError` for a line with `-->` that isn't a timing it can read, and for a block with no timing, other than the header and `NOTE`, `STYLE` and `REGION` blocks. These used to vanish. `from_md` raises for a line whose time isn't one, such as `**[Music - intro]** la la`, which used to become text.
 - `from_srt` reads SRT itself instead of through `srt.parse`, whose time grew steeply on hostile input. It reads what `srt.parse` did, and raises `ValueError` for a time that is out of range or has more than three digits of a second. Its messages give a line number. A line like `nan --> inf` after a caption stays caption text, as before.
 - Document TSV output changes for records with polygon or multi-polygon blocks: a new last `polygon` column, and those blocks' box columns hold their bounding box. Other records export the same bytes.
 - Audio TSV with `include_speakers=True` gains a last `speaker_id` column if a speaker's id differs from its name, and `from_tsv` reads it. Other records export the same bytes.
-- `from_md` reads the frontmatter's `language`, `duration`, `score_explanation`, `track_id` and `attributes`, and its `producer` unless you pass one. `producer` now defaults to `None`, and to `"md-adapter"` if there is no frontmatter producer.
+- `from_md` reads the frontmatter's `language`, `duration`, `score_explanation`, `track_id` and `attributes`, and its `producer` unless you pass one. `producer` now defaults to `None`, and to `"md-adapter"` if there is no frontmatter producer. Frontmatter that 0.1.0 ignored can now fail the parse: a value the schema refuses, such as `language: en` or `track_id: 3`, raises `ValidationError`, and a `duration` that isn't a number, such as `1:23:45`, or `attributes` that aren't JSON values, raises `ValueError`.
 - Document Markdown renders a record with no blocks, such as an image-only PDF's, as "No content extracted from this document." instead of raising `ValueError`. Plain text, TSV and hOCR still raise.
 - `parse_file` stops at `max_size` (256 MiB by default) and raises `ValueError`.
-- With or without `validate`, tables are limited to 100,000 rows, 256 columns and 16 MiB a cell, with no repeated column among those read; SRT, WebVTT and Markdown to 100,000 segments; hOCR to 100,000 blocks and pages and 256 nested elements; and JSON to 4,000,000 commas and opening brackets, 64 levels and 1,024 characters in a key. Errors no longer quote the content at length.
-- `list_schemas()` now returns all 12 OATS schemas, because each has a `json` adapter.
+- With or without `validate`, tables are limited to 100,000 rows and 256 cells in a row, with no repeated column among those read; SRT, WebVTT and Markdown to 100,000 segments; hOCR to 100,000 blocks, pages and open elements; and JSON to 4,000,000 commas and opening brackets, 64 levels and 1,024 characters in a key. Errors no longer quote the content at length.
+- `list_schemas()` now returns all 12 OATS schemas, because each has a `json` adapter. Registering your own `json` format for one of them now needs `replace=True`.
 
 ### Added
 

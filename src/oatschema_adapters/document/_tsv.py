@@ -20,12 +20,21 @@ def _pairs(points: list[dict[str, Any]]) -> list[list[Any]]:
     return [[point["x"], point["y"]] for point in points]
 
 
+def _geometry(block: dict[str, Any]) -> dict[str, Any]:
+    if "multi_polygon" in block and (block.get("block_type") == "multi_polygon" or "polygon" not in block):
+        return {"multi_polygon": block["multi_polygon"]}
+    if "polygon" in block:
+        return {"polygon": block["polygon"]}
+    return {}
+
+
 def _polygon_cell(block: dict[str, Any]) -> str:
+    geometry = _geometry(block)
     try:
-        if "polygon" in block:
-            cell: list[Any] = _pairs(block["polygon"])
-        elif "multi_polygon" in block:
-            cell = [_pairs(polygon) for polygon in block["multi_polygon"]]
+        if "polygon" in geometry:
+            cell: list[Any] = _pairs(geometry["polygon"])
+        elif "multi_polygon" in geometry:
+            cell = [_pairs(polygon) for polygon in geometry["multi_polygon"]]
         else:
             return ""
     except (KeyError, TypeError):
@@ -33,14 +42,18 @@ def _polygon_cell(block: dict[str, Any]) -> str:
     return json.dumps(cell, separators=(",", ":"))
 
 
+def _bounding_box(geometry: dict[str, Any]) -> dict[str, Any] | None:
+    try:
+        return _get_bounding_box(geometry)
+    except (KeyError, TypeError, ValueError, OverflowError):
+        return None
+
+
 def _exported_box(block: dict[str, Any]) -> dict[str, Any]:
     if "box" in block:
         box: dict[str, Any] = block["box"]
         return box
-    try:
-        return _get_bounding_box(block) or {}
-    except (KeyError, TypeError, ValueError):
-        return {}
+    return _bounding_box(_geometry(block)) or {}
 
 
 def _is_pair(value: Any) -> bool:
@@ -76,7 +89,8 @@ def to_tsv(
     The columns are ``page_number``, ``block_type``, the box's ``x``, ``y``, ``width`` and ``height``, and ``text``.
     If any block has a polygon or multi-polygon, there is a last ``polygon`` column of compact JSON: ``[[x,y],...]``,
     or one level deeper for a multi-polygon. The box columns of such a block with no box hold its bounding box. A
-    block with both a polygon and a multi-polygon keeps only the polygon. A cell that a spreadsheet would run as a
+    block with both a polygon and a multi-polygon keeps the multi-polygon if its ``block_type`` is
+    ``multi_polygon``, and the polygon otherwise. A cell that a spreadsheet would run as a
     formula starts with ``'``; ``from_tsv`` removes it.
 
     Excel keeps only 15 significant digits of a number and at most 32,767 characters in a cell, so opening and saving
@@ -176,7 +190,7 @@ def from_tsv(
 
         polygon = row.get(_POLYGON)
         geometry = _read_geometry(polygon) if polygon else {}
-        if box and box != _get_bounding_box(geometry):
+        if box and box != _bounding_box(geometry):
             block["box"] = box
         block.update(geometry)
 

@@ -18,7 +18,7 @@ _ATTRIBUTE = re.compile(r"""([^\s"'<>/=]+)(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s"'=<>
 _TAG_NAME = re.compile(r"<\s*[^\s/>]+")
 _PAGE_NUMBER = re.compile(r"\d+")
 _WHITESPACE = re.compile(r"\s+")
-_MAX_DEPTH = 256
+_MAX_DEPTH = MAX_ITEMS
 _RELATIVE_UNITS = {"normalized": 1.0, "per_mille": 1000.0}
 _VOID_ELEMENTS = frozenset(
     {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
@@ -228,6 +228,7 @@ class _HOCRParser(HTMLParser):
         self.target_class = target_class
         self.max_text = max_text
         self.block_text = 0
+        self.searched = 0
         self.open_tags: Counter[str] = Counter()
         self.blocks: list[dict[str, Any]] = []
         self.page_width_map: dict[int, float] = {}
@@ -261,7 +262,7 @@ class _HOCRParser(HTMLParser):
                 self._set_page_size(self.page_height_map, title_data["box"]["height"])
 
         if len(self.stack) >= _MAX_DEPTH:
-            raise ValueError(f"The hOCR content nests more than {_MAX_DEPTH} elements deep.")
+            raise ValueError(f"The hOCR content leaves more than {_MAX_DEPTH:,} elements open.")
         self.open_tags[tag] += 1
         self.stack.append(
             {
@@ -287,6 +288,9 @@ class _HOCRParser(HTMLParser):
             return
         self.open_tags[tag] -= 1
         for i in reversed(range(len(self.stack))):
+            self.searched += 1
+            if self.searched > self.max_text:
+                raise ValueError("The hOCR content leaves too many elements open.")
             if self.stack[i]["tag"] == tag:
                 closed = self.stack.pop(i)
                 if self.stack:
@@ -378,7 +382,8 @@ def from_hocr(
             removes it and reports it in the result's ``dropped``, and ``"raise"`` rejects the record.
 
     Raises:
-        ValueError: The content is empty, isn't hOCR, nests more than 256 elements deep, has more than 100,000 blocks or pages,
+        ValueError: The content is empty, isn't hOCR, leaves more than 100,000 elements open, has more than 100,000 blocks or
+            pages,
             has no non-empty ``target_class`` elements, gives a page two sizes, or has a ``bbox``, ``x_wconf`` or
             polygon that isn't a usable number or JSON.
         oatschema.ValidationError: The parsed record doesn't conform to the schema.

@@ -17,7 +17,6 @@ _COMMENT = re.compile(r"(?:NOTE|STYLE|REGION)(?:[ \t]|$)")
 _LINE_BREAK = re.compile(r"\r\n|\r|\n")
 _STAMP = r"(?:[0-9]+:)?[0-9]{1,2}:[0-9]{1,2}\.[0-9]{1,3}"
 _TIMING = re.compile(rf"\s*{_STAMP}\s*-->\s*{_STAMP}(?:\s.*)?")
-_ARROW_AFTER_TIME = re.compile(r"\s*[0-9:.]+\s*-+\s*>")
 
 
 def _timing_lines(content: str) -> int:
@@ -34,7 +33,7 @@ def _timing_lines(content: str) -> int:
             for text in block[1:] if is_header else block:
                 if _TIMING.fullmatch(text):
                     found += 1
-                elif "-->" in text or _ARROW_AFTER_TIME.match(text):
+                elif "-->" in text:
                     raise ValueError(f"Failed to parse WebVTT content: a bad timing before line {number + 1}")
             if not found and not is_header:
                 raise ValueError(f"Failed to parse WebVTT content: the block before line {number + 1} has no timing")

@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2026 The OATS Authors
 # SPDX-License-Identifier: Apache-2.0
 
+import csv
 import random
 from typing import Any
 
@@ -88,8 +89,36 @@ def test_the_largest_multi_polygon_round_trips_at_its_full_precision() -> None:
     point = {"x": 1234567.0000000002, "y": 7654321.000000001}
     block = {"block_type": "multi_polygon", "multi_polygon": [[point] * 1000] * 100}
     table = to_document_tsv(_document(**block))
-    assert len(table) > 131072
-    assert from_document_tsv(table)["blocks"] == [block]
+    assert len(table) > csv.field_size_limit()
+    with pytest.raises(ValueError, match="field larger than field limit"):
+        from_document_tsv(table)
+    previous = csv.field_size_limit(len(table))
+    try:
+        assert from_document_tsv(table)["blocks"] == [block]
+    finally:
+        csv.field_size_limit(previous)
+
+
+def test_a_multi_polygon_block_that_also_has_a_polygon_keeps_its_multi_polygon() -> None:
+    shifted = [{"x": point["x"] + 50, "y": point["y"]} for point in TRIANGLE]
+    block = {"block_type": "multi_polygon", "polygon": TRIANGLE, "multi_polygon": [TRIANGLE, shifted]}
+    parsed = from_document_tsv(to_document_tsv(_document(**block)))
+    assert parsed["blocks"] == [{"block_type": "multi_polygon", "multi_polygon": [TRIANGLE, shifted]}]
+
+
+def test_a_coordinate_too_large_for_a_double_exports_with_empty_box_columns() -> None:
+    block = {"block_type": "polygon", "polygon": [{"x": 10**400, "y": 0}, {"x": 1, "y": 1}, {"x": 2, "y": 2}]}
+    row = to_document_tsv(_document(**block), validate=False).splitlines()[1].split("\t")
+    assert row[2:6] == ["", "", "", ""]
+
+
+def test_a_coordinate_too_large_for_a_double_is_read_without_overflowing() -> None:
+    table = f"x\ty\twidth\theight\ttext\tpolygon\n0\t0\t2\t2\thi\t[[{10**400},0],[1,1],[2,2]]\n"
+    with pytest.raises(oatschema.ValidationError):
+        from_document_tsv(table)
+    block = from_document_tsv(table, validate=False)["blocks"][0]
+    assert block["box"] == {"x": 0.0, "y": 0.0, "width": 2.0, "height": 2.0}
+    assert block["polygon"][0]["x"] == 10**400
 
 
 def test_polygon_tsv_of_invalid_geometry_still_exports_unvalidated() -> None:

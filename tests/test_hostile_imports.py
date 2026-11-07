@@ -1,9 +1,12 @@
 # SPDX-FileCopyrightText: 2026 The OATS Authors
 # SPDX-License-Identifier: Apache-2.0
 
+import csv
 import gzip
 import io
 import json
+import random
+import re
 import time
 import tracemalloc
 from pathlib import Path
@@ -109,25 +112,84 @@ def test_malformed_content_fails_with_a_bounded_value_error(
 
 def test_over_long_values_fail_validation_without_quoting_them() -> None:
     with pytest.raises(oatschema.ValidationError) as caught:
-        get_adapter(AUDIO, "tsv").parse(f"start_time\ttext\n1\t{LONG}\n")
+        get_adapter(AUDIO, "tsv").parse(f"start_time\ttext\n1\t{LONG[:100_000]}\n")
     assert _chain_is_bounded(caught.value)
 
 
 def test_a_wide_header_cant_multiply_short_rows() -> None:
     header = "\t".join(f"c{i}" for i in range(200_000))
-    with pytest.raises(ValueError, match="at most 256 columns"):
+    with pytest.raises(ValueError, match="at most 256 cells in a row"):
         get_adapter(DOCUMENT, "tsv").parse(f"text\t{header}\n" + "hi\n" * 200_000)
 
 
 def test_rows_longer_than_the_header_are_cut() -> None:
-    assert get_adapter(DOCUMENT, "tsv").parse("text\nhi\t" + "\t".join("x" * 1000) + "\n")["blocks"][0]["text"] == "hi"
+    assert get_adapter(DOCUMENT, "tsv").parse("text\nhi\t" + "\t".join("x" * 255) + "\n")["blocks"][0]["text"] == "hi"
+
+
+@pytest.mark.parametrize("separator", ["\t", '\t""'])
+def test_a_wide_data_row_is_refused_before_it_is_split(separator: str) -> None:
+    content = "start_time\ttext\n1\thi\n" + "ab" + (separator + "ab") * 3_000_000 + "\n"
+    tracemalloc.start()
+    try:
+        with pytest.raises(ValueError, match="at most 256 cells in a row"):
+            get_adapter(AUDIO, "tsv").parse(content)
+        peak = tracemalloc.get_traced_memory()[1]
+    finally:
+        tracemalloc.stop()
+    assert peak < 4 * len(content)
+
+
+def test_tabs_and_line_breaks_inside_a_quoted_cell_dont_count_as_cells() -> None:
+    from oatschema_adapters import _tsv
+
+    text = "a" + "\tb" * 1000 + "\n" + "\tc" * 1000
+    assert _tsv.read(f'text\n"{text}"\n', ["text"])[1] == [{"text": text}]
+
+
+def test_the_row_width_check_agrees_with_csv(monkeypatch: pytest.MonkeyPatch) -> None:
+    from oatschema_adapters import _tsv
+
+    monkeypatch.setattr(_tsv, "_RECORD", re.compile(_tsv._RECORD.pattern.replace("{0,255}", "{0,2}")))
+    rnd = random.Random(7)
+    for _ in range(20_000):
+        content = "".join(rnd.choice('a\t\t"\r\n ') for _ in range(rnd.randint(1, 24))).strip("\r\n")
+        if not content.strip():
+            continue
+        try:
+            rows = list(csv.reader(io.StringIO(content, newline=""), delimiter="\t"))
+        except csv.Error:
+            continue
+        expected = max((len(row) for row in rows), default=0) > 3
+        assert _tsv._has_a_wide_row(content) == expected, repr(content)
+
+
+def test_parsing_a_table_leaves_the_csv_field_limit_alone() -> None:
+    before = csv.field_size_limit()
+    get_adapter(AUDIO, "tsv").parse("start_time\ttext\n1\thi\n")
+    assert csv.field_size_limit() == before
 
 
 def test_hocr_depth_is_capped_before_it_costs_time() -> None:
     deep = '<div class="ocr_page">' + '<span class="ocr_carea">aaaaaaaaaa' * 100_000 + "</span>" * 100_000 + "</div>"
     started = time.monotonic()
-    with pytest.raises(ValueError, match="nests more than 256"):
+    with pytest.raises(ValueError, match="more than 100,000 elements open"):
         get_adapter(DOCUMENT, "hocr").parse(deep)
+    assert time.monotonic() - started < 30
+
+
+def test_hocr_paragraphs_without_end_tags_are_read() -> None:
+    lines = "".join(
+        f"<p class='ocr_par'><span class='ocr_line' title='bbox 0 {i} 10 {i + 1}'>w{i}</span>" for i in range(300)
+    )
+    content = f"<div class='ocr_page' title='bbox 0 0 100 400'>{lines}</div>"
+    assert len(get_adapter(DOCUMENT, "hocr").parse(content)["blocks"]) == 300
+
+
+def test_hocr_end_tags_cant_search_many_open_elements_many_times() -> None:
+    content = "<b>" * 40_000 + "<p>" * 40_000 + "</b>" * 40_000
+    started = time.monotonic()
+    with pytest.raises(ValueError, match="too many elements open"):
+        get_adapter(DOCUMENT, "hocr").parse(content)
     assert time.monotonic() - started < 30
 
 
@@ -322,6 +384,10 @@ def test_an_empty_text_file_object_is_a_value_error_or_invalid(fmt: str) -> None
         ("WEBVTT\n\nNOTE a comment\nmore\n\nSTYLE\n::cue {}\n\n00:01.000 --> 00:02.000\na\n", ["a"]),
         ("WEBVTT\n\n00:01.000 --> 00:02.000\na\u2028\u2028b\n", None),
         ("WEBVTT\n\n00:01.000 --> 00:02.000\na -> b\n", ["a -> b"]),
+        ("WEBVTT\n\n00:01.000 --> 00:02.000\n2 -> 3 today\n", ["2 -> 3 today"]),
+        ("WEBVTT\n\n00:01.000 --> 00:02.000\n10 - > 20\n", ["10 - > 20"]),
+        ("WEBVTT\n\n00:01.000 --> 00:02.000\n3:15 -> 3:45 is the slot\n", ["3:15 -> 3:45 is the slot"]),
+        ("WEBVTT\n\n1 -> intro\n00:01.000 --> 00:02.000\na\n", ["a"]),
     ],
 )
 def test_legitimate_webvtt_is_read(content: str, texts: list[str] | None) -> None:
