@@ -143,9 +143,15 @@ def test_document_round_trip_with_an_empty_last_cell() -> None:
 
 def test_document_round_trip_unvalidated() -> None:
     record = _hostile_document()
+    table = DOCUMENT.export(record, validate=False)
+    with pytest.raises(ValueError, match="page number"):
+        DOCUMENT.parse(table, validate=False)
+    del record["blocks"][1]["page_number"]
+    with pytest.raises(ValueError, match="not a number"):
+        DOCUMENT.parse(DOCUMENT.export(record, validate=False), validate=False)
+    del record["blocks"][2]["box"]
     parsed = DOCUMENT.parse(DOCUMENT.export(record, validate=False), validate=False)
     assert parsed["blocks"][0]["block_type"] == "=cmd|'/C calc'!A0"
-    assert "page_number" not in parsed["blocks"][1]
     assert [block.get("text") for block in parsed["blocks"][:8]] == [b["text"] for b in record["blocks"][:8]]
 
 
@@ -156,9 +162,9 @@ def test_audio_round_trip(include_speakers: bool) -> None:
     expected = []
     for segment in record["segments"]:
         kept: dict[str, Any] = {key: segment[key] for key in ("start_time", "end_time", "text")}
-        name = segment.get("speaker", {}).get("name")
-        if include_speakers and name:
-            kept["speaker"] = {"id": name, "name": name}
+        speaker = segment.get("speaker", {})
+        if include_speakers and speaker:
+            kept["speaker"] = {key: speaker[key] for key in ("id", "name") if key in speaker}
         expected.append(kept)
     assert parsed["segments"] == expected
     assert parsed["text"] == " ".join(segment["text"] for segment in record["segments"])
@@ -167,9 +173,9 @@ def test_audio_round_trip(include_speakers: bool) -> None:
 def test_audio_round_trip_with_an_empty_last_cell() -> None:
     record = _hostile_audio()
     table = AUDIO.export(record, include_speakers=True)
-    assert table.endswith("plain = fine\t\r\n")
+    assert table.endswith("plain = fine\t\tw\r\n")
     last = AUDIO.parse(table)["segments"][-1]
-    assert last == {"start_time": 7.0, "end_time": 8.0, "text": "plain = fine"}
+    assert last == {"start_time": 7.0, "end_time": 8.0, "text": "plain = fine", "speaker": {"id": "w"}}
 
 
 def test_tsv_parsers_ignore_surrounding_blank_lines() -> None:

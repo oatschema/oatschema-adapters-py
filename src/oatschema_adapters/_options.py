@@ -5,9 +5,11 @@ import functools
 import inspect
 import math
 import os
+import re
 import types
 import typing
 from collections.abc import Callable
+from dataclasses import dataclass
 from typing import Any, Literal, TypeVar, Union
 
 F = TypeVar("F", bound=Callable[..., Any])
@@ -18,13 +20,40 @@ _NONE = frozenset({"none", "null"})
 _OPTION_KINDS = (inspect.Parameter.POSITIONAL_OR_KEYWORD, inspect.Parameter.KEYWORD_ONLY)
 
 
+_SHORT = 80
+_ARGUMENT = re.compile(r"^(\s+)(\w+): (.*)$")
+
+
+def shorten(text: object, limit: int = _SHORT) -> str:
+    """Return ``repr(text)``, cut to about ``limit`` characters, for an error message."""
+    if isinstance(text, (str, bytes)) and len(text) > limit:
+        return f"{text[:limit]!r}… ({len(text)} long)"
+    return repr(text)[: limit * 4]
+
+
 class _NoMatch(Exception):
     pass
+
+
+@dataclass(frozen=True)
+class AdapterOption:
+    """One option of an adapter's ``export`` or ``parse``.
+
+    ``type`` is a description such as ``"true or false"``, and ``default`` is ``None`` for a required option.
+    """
+
+    name: str
+    type: str
+    default: Any
+    required: bool
+    description: str
 
 
 def _describe(hint: Any) -> str:
     if hint is type(None):
         return "None"
+    if hint is Any:
+        return "any value"
     if typing.get_origin(hint) is Literal:
         return " or ".join(repr(value) for value in typing.get_args(hint))
     if typing.get_origin(hint) in (Union, types.UnionType):
@@ -32,6 +61,48 @@ def _describe(hint: Any) -> str:
     if hint is os.PathLike or typing.get_origin(hint) is os.PathLike:
         return "a path"
     return {bool: "true or false", int: "an integer", float: "a number", str: "a string"}.get(hint, str(hint))
+
+
+def _descriptions(function: Callable[..., Any]) -> dict[str, str]:
+    doc = inspect.getdoc(function) or ""
+    _, found, section = doc.partition("Args:\n")
+    if not found:
+        return {}
+    descriptions: dict[str, list[str]] = {}
+    current: list[str] = []
+    for line in section.splitlines():
+        if line and not line[0].isspace():
+            break
+        match = _ARGUMENT.match(line)
+        if match and len(match.group(1)) == 4:
+            current = descriptions.setdefault(match.group(2), [])
+            current.append(match.group(3))
+        elif line.strip():
+            current.append(line.strip())
+    return {name: " ".join(parts) for name, parts in descriptions.items()}
+
+
+def describe_options(function: Callable[..., Any] | None) -> tuple[AdapterOption, ...]:
+    """Return the options of an export or parse ``function``: every named parameter after the first."""
+    if function is None:
+        return ()
+    parameters = list(inspect.signature(function).parameters.values())[1:]
+    try:
+        hints = typing.get_type_hints(function)
+    except (NameError, TypeError):
+        hints = {}
+    descriptions = _descriptions(function)
+    return tuple(
+        AdapterOption(
+            name=parameter.name,
+            type=_describe(hints.get(parameter.name, Any)),
+            default=None if parameter.default is inspect.Parameter.empty else parameter.default,
+            required=parameter.default is inspect.Parameter.empty,
+            description=descriptions.get(parameter.name, ""),
+        )
+        for parameter in parameters
+        if parameter.kind in _OPTION_KINDS
+    )
 
 
 def _convert(value: Any, hint: Any) -> Any:
@@ -128,7 +199,7 @@ def checked(function: F) -> F:
             unknown = sorted(set(kwargs) - set(options) - {parameters[0].name})
             if unknown:
                 known = ", ".join(options)
-                raise TypeError(f"{name}() got unknown option(s) {', '.join(map(repr, unknown))}; options: {known}")
+                raise TypeError(f"{name}() got unknown option(s) {', '.join(map(shorten, unknown))}; options: {known}")
         bound = signature.bind(*args, **kwargs)
         for option, value in bound.arguments.items():
             if option not in options:
@@ -138,7 +209,7 @@ def checked(function: F) -> F:
             except _NoMatch:
                 expected = _describe(options[option])
                 error = ValueError if isinstance(value, str) else TypeError
-                raise error(f"{name}() option {option!r} must be {expected}, not {value!r}") from None
+                raise error(f"{name}() option {option!r} must be {expected}, not {shorten(value)}") from None
         return function(*bound.args, **bound.kwargs)
 
     return typing.cast(F, wrapper)

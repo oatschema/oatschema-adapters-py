@@ -70,7 +70,7 @@ def test_every_import_is_a_declared_dependency() -> None:
 def test_dependencies() -> None:
     with open(PROJECT / "pyproject.toml", "rb") as f:
         project = tomllib.load(f)["project"]
-    assert "oatschema[validate]>=0.8.0.2,<0.9" in project["dependencies"]
+    assert "oatschema[validate]>=0.9.0.0,<0.10" in project["dependencies"]
     assert {_canonical(name) for name in _declared()} == {"oatschema", "srt", "webvtt-py"}
 
 
@@ -110,7 +110,7 @@ def test_wheel_metadata(dist: Path) -> None:
     assert not any(classifier.startswith("License ::") for classifier in metadata.get_all("Classifier") or [])
     assert "Homepage, https://oatschema.org" in (metadata.get_all("Project-URL") or [])
     requirements = {re.sub(r"\s+", "", r) for r in metadata.get_all("Requires-Dist") or []}
-    assert requirements == {"oatschema[validate]<0.9,>=0.8.0.2", "srt>=3.5.3", "webvtt-py>=0.5.1"}
+    assert requirements == {"oatschema[validate]<0.10,>=0.9.0.0", "srt>=3.5.3", "webvtt-py>=0.6.0"}
     assert "dorsal" not in str(metadata).lower()
 
 
@@ -132,7 +132,7 @@ def test_a_clean_install_runs_every_adapter_with_validation(dist: Path, tmp_path
     assert uv is not None
     (wheel,) = dist.glob("*.whl")
     venv = tmp_path / "venv"
-    env = {key: value for key, value in os.environ.items() if key != "VIRTUAL_ENV"}
+    env = {key: value for key, value in os.environ.items() if key not in ("VIRTUAL_ENV", "UV_VENV_SEED")}
     subprocess.run([uv, "venv", "--quiet", "--python", sys.executable, str(venv)], check=True, env=env)
     python = venv / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
     subprocess.run([uv, "pip", "install", "--quiet", "--python", str(python), str(wheel)], check=True, env=env)
@@ -144,7 +144,7 @@ def test_a_clean_install_runs_every_adapter_with_validation(dist: Path, tmp_path
         cwd=tmp_path,
     )
     assert result.returncode == 0, result.stdout + result.stderr
-    assert result.stdout.count(": ok") == 10
+    assert result.stdout.count(": ok") == 22
     listing = subprocess.run(
         [uv, "pip", "list", "--python", str(python), "--format", "json"],
         capture_output=True,

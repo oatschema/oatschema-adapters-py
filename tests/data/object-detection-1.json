@@ -1,0 +1,15 @@
+{
+  "objects": [
+    {
+      "label": "cat",
+      "box": {
+        "x": 1,
+        "y": 2,
+        "width": 3,
+        "height": 4
+      }
+    }
+  ],
+  "unit": "px",
+  "producer": "p"
+}

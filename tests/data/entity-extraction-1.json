@@ -1,0 +1,11 @@
+{
+  "entities": [
+    {
+      "concept": "person",
+      "label": "PERSON",
+      "text": "Ada",
+      "score": 0.5
+    }
+  ],
+  "producer": "p"
+}

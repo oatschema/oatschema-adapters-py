@@ -2,16 +2,19 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import re
-from typing import Any
+from typing import Any, Literal
 
-from oatschema_adapters._frontmatter import frontmatter
-from oatschema_adapters._options import checked
-from oatschema_adapters._validation import check_record, validate_record
+from oatschema_adapters._frontmatter import frontmatter, read_frontmatter
+from oatschema_adapters._numbers import MAX_ITEMS
+from oatschema_adapters._options import checked, shorten
+from oatschema_adapters._parsed import ParsedRecord
+from oatschema_adapters._validation import check_record, finish_parse
 from oatschema_adapters.audio._time import parse_clock, split_milliseconds
 
 _FRONTMATTER_KEYS = ("producer", "language", "duration", "score_explanation", "track_id")
-_FRONTMATTER = re.compile(r"^---\n.*?\n---\n", re.DOTALL)
+_FRONTMATTER = re.compile(r"^---\n(.*?)\n---(?:\n|$)", re.DOTALL)
 _SEGMENT = re.compile(r"^\*\*\[([\d:.]+)\s*-\s*([\d:.]+)\]\*\*(?:\s*\*\*([^:]+):\*\*)?\s+(.*)", re.IGNORECASE)
+_TIMED = re.compile(r"^\*\*\[[^\]]* - [^\]]*\]\*\*")
 _EVENTS = re.compile(r"^\*\[(.*)\]\*$")
 
 
@@ -45,7 +48,7 @@ def to_md(
     Args:
         record: The record to convert.
         validate: Validate the record before converting it.
-        schema_version: The schema version to validate against, such as ``"0.8.0"``. Defaults to the newest.
+        schema_version: The schema version to validate against, such as ``"0.9.0"``. Defaults to the newest.
         include_timestamps: Start each paragraph with the segment's start and end time.
         include_milliseconds: Show milliseconds in the times, rounded to the nearest millisecond.
         include_speakers: Show each segment's speaker name.
@@ -110,35 +113,46 @@ def to_md(
 def from_md(
     md_content: str,
     *,
-    producer: str = "md-adapter",
+    producer: str | None = None,
     validate: bool = True,
     schema_version: str | None = None,
-) -> dict[str, Any]:
+    on_bad_number: Literal["drop", "raise"] = "drop",
+) -> ParsedRecord:
     """Parse Markdown written by ``to_md`` back into an ``audio-transcription`` record.
 
-    Markdown loses information, so this reads only the layout ``to_md`` writes. Event lines (``> *[music]*``) become
-    the ``events`` of the segment that follows them.
+    Markdown loses information, so this reads only the layout ``to_md`` writes. Frontmatter gives the record's
+    producer, language, duration, score explanation, track id and attributes. Event lines (``> *[music]*``) become
+    the ``events`` of the segment that follows them. Markdown has nowhere to hold a speaker's id, so the id is the
+    name, and it holds no segment scores, ids or attributes.
 
     Args:
         md_content: The Markdown text.
-        producer: The record's ``producer``.
-        validate: Validate the record before returning it.
+        producer: The record's ``producer``. Defaults to the frontmatter's, or else ``"md-adapter"``.
+        validate: Check the record's numbers and validate it before returning it.
         schema_version: The schema version to validate against. Defaults to the newest.
+        on_bad_number: What ``oatschema.check_numbers`` does with a bad number in an optional property: ``"drop"``
+            removes it and reports it in the result's ``dropped``, and ``"raise"`` rejects the record.
 
     Raises:
-        ValueError: The content is empty.
+        ValueError: The content is empty, has more than 100,000 segments, or has a time or frontmatter value that
+            isn't usable.
         oatschema.ValidationError: The parsed record doesn't conform to the schema.
     """
     if not md_content.strip():
         raise ValueError("Provided Markdown content is empty.")
 
-    content = _FRONTMATTER.sub("", md_content.replace("\r\n", "\n"), count=1).strip()
+    normalised = md_content.replace("\r\n", "\n")
+    header = _FRONTMATTER.match(normalised)
+    fields = read_frontmatter(header.group(1), _FRONTMATTER_KEYS) if header else {}
+    content = (normalised[header.end() :] if header else normalised).strip()
 
     segments: list[dict[str, Any]] = []
     texts = []
     pending_events: list[str] = []
 
     def add(segment: dict[str, Any]) -> None:
+        if len(segments) >= MAX_ITEMS:
+            raise ValueError(f"Markdown can have at most {MAX_ITEMS} segments.")
         if pending_events:
             segment["events"] = list(pending_events)
             pending_events.clear()
@@ -167,15 +181,24 @@ def from_md(
                 segment["speaker"] = {"id": speaker.strip(), "name": speaker.strip()}
             add(segment)
             texts.append(text.strip())
+        elif _TIMED.match(line):
+            raise ValueError(f"not a time: {shorten(line)}")
         else:
             text = line.replace("**", "").strip()
             add({"start_time": 0.0, "end_time": 0.0, "text": text})
             texts.append(text)
 
     if pending_events:
+        if len(segments) >= MAX_ITEMS:
+            raise ValueError(f"Markdown can have at most {MAX_ITEMS} segments.")
         segments.append({"start_time": 0.0, "end_time": 0.0, "text": "", "events": list(pending_events)})
 
-    record = {"producer": producer, "text": " ".join(t for t in texts if t), "segments": segments}
-    if validate:
-        validate_record(record, "audio-transcription", version=schema_version)
-    return record
+    record = {
+        **fields,
+        "producer": producer or fields.get("producer", "md-adapter"),
+        "text": " ".join(t for t in texts if t),
+        "segments": segments,
+    }
+    return finish_parse(
+        record, "audio-transcription", validate=validate, version=schema_version, on_bad_number=on_bad_number
+    )

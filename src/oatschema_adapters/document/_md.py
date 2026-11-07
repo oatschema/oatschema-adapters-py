@@ -34,12 +34,12 @@ def to_md(
 
     Blocks are joined into paragraphs as for ``to_txt``. A ``visual_class`` attribute of ``title`` or ``h1``,
     ``h2``, or ``h3`` or ``heading`` makes a paragraph a heading. Blocks with no text are shown as placeholders
-    with their coordinates.
+    with their coordinates. A record with no blocks, such as an image-only PDF's, says that no content was extracted.
 
     Args:
         record: The record to convert.
         validate: Validate the record before converting it.
-        schema_version: The schema version to validate against, such as ``"0.8.0"``. Defaults to the newest.
+        schema_version: The schema version to validate against, such as ``"0.9.0"``. Defaults to the newest.
         strict: Keep each line of a paragraph on its own line, and don't join hyphenated words.
         include_frontmatter: Start with YAML frontmatter holding the record's producer, extraction type, unit,
             score explanation and attributes.
@@ -50,19 +50,19 @@ def to_md(
         scale: As for ``to_txt``.
 
     Raises:
-        ValueError: The record has no blocks.
         oatschema.ValidationError: The record doesn't conform to the schema.
     """
     check_record(record, "document-extraction", validate=validate, version=schema_version)
-
-    if not record.get("blocks"):
-        raise ValueError("The provided record contains no 'blocks'.")
 
     output = []
     if include_frontmatter:
         header = frontmatter(record, _FRONTMATTER_KEYS)
         if header is not None:
             output.append(header)
+
+    if not record.get("blocks"):
+        output.append("*No content extracted from this document.*")
+        return "\n\n".join(output)
 
     pages = extract_spatial_pages(
         record,

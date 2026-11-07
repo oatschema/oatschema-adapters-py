@@ -4,12 +4,18 @@
 import csv
 import io
 import re
-from collections.abc import Iterable, Iterator
-from typing import Any
+import threading
+from collections.abc import Iterable
+
+from oatschema_adapters._numbers import MAX_ITEMS
+
 
 _TRIGGERS = ("=", "+", "-", "@", "\t", "\r")
 _NUMBER = re.compile(r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?", re.ASCII)
 _ESCAPED = re.compile(r"'+[=+\-@\t\r]")
+_MAX_COLUMNS = 256
+_MAX_CELL = 16 * 1024 * 1024
+_FIELD_LIMIT_LOCK = threading.Lock()
 
 
 def neutralise(cell: object) -> str:
@@ -41,26 +47,44 @@ def write(header: list[str], rows: Iterable[list[object]]) -> str:
     return output.getvalue()
 
 
-def read(content: str) -> tuple[list[str], Iterator[dict[str, str]]]:
-    """Return the header and rows of a TSV table, with every cell passed through ``restore``.
+def read(content: str, columns: Iterable[str]) -> tuple[list[str], list[dict[str, str]]]:
+    """Return the header of a TSV table, and its rows as the named ``columns``, with cells passed through ``restore``.
 
     Blank lines before the header and after the last row are ignored; a last row ending in empty cells keeps them.
+    Other columns, and cells past the end of the header, are ignored.
 
     Raises:
-        ValueError: The content is empty.
+        ValueError: The content is empty, isn't a table, has more than 256 columns, 100,000 rows or a cell over
+            16 MiB, or names one of ``columns`` twice.
     """
     lines = content.lstrip("\r\n").rstrip("\r\n")
     if not lines.strip():
         raise ValueError("Provided TSV content is empty.")
-    reader = csv.reader(io.StringIO(lines, newline=""), delimiter="\t")
-    header = next(reader)
-
-    def rows() -> Iterator[dict[str, str]]:
-        for row in reader:
-            if not row:
-                continue
-            cells = [restore(cell) for cell in row]
-            cells += [""] * (len(header) - len(cells))
-            yield dict(zip(header, cells, strict=False))
-
-    return header, rows()
+    wanted = set(columns)
+    header: list[str] = []
+    positions: list[tuple[str, int]] = []
+    rows: list[dict[str, str]] = []
+    problem = None
+    with _FIELD_LIMIT_LOCK:
+        previous = csv.field_size_limit(_MAX_CELL)
+        try:
+            for number, row in enumerate(csv.reader(io.StringIO(lines, newline=""), delimiter="\t")):
+                if number == 0:
+                    header = row
+                    if len(header) > _MAX_COLUMNS:
+                        raise ValueError(f"A TSV table can have at most {_MAX_COLUMNS} columns, not {len(header)}.")
+                    named = [name for name in header if name in wanted]
+                    if len(named) != len(set(named)):
+                        raise ValueError("A TSV table names a column twice.")
+                    positions = [(name, index) for index, name in enumerate(header) if name in wanted]
+                elif row:
+                    if len(rows) >= MAX_ITEMS:
+                        raise ValueError(f"A TSV table can have at most {MAX_ITEMS} rows.")
+                    rows.append({name: restore(row[index]) if index < len(row) else "" for name, index in positions})
+        except csv.Error as error:
+            problem = str(error)
+        finally:
+            csv.field_size_limit(previous)
+    if problem:
+        raise ValueError(f"Failed to read the TSV table: {problem}")
+    return header, rows

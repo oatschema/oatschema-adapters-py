@@ -31,8 +31,28 @@ TSV_EMPTY_CELL = "a last row ending in an empty cell parses"
 TSV_TEXT = "an empty text cell gives no text to a block that doesn't need one, instead of '' or None"
 HOCR_UNITS = "normalized and per_mille coordinates are scaled to the page"
 HOCR_NO_LINES = "content with no ocr_line text raises ValueError instead of returning no blocks"
+TSV_POLYGONS = "document TSV has a polygon column, and polygon blocks' box columns hold their bounding box"
+TSV_SPEAKER_IDS = "audio TSV has a speaker_id column when an id differs from its name, and from_tsv reads it"
+MD_FRONTMATTER = "from_md reads the frontmatter's producer, language, duration, explanation, track id and attributes"
 
 CHANGED = {
+    "document-extraction-normalized.tsv.0.parsed": TSV_POLYGONS,
+    "document-extraction-normalized.tsv.0": TSV_POLYGONS,
+    "document-extraction-hostile.tsv.0": TSV_POLYGONS,
+    "document-extraction-2.tsv.0": TSV_POLYGONS,
+    "document-extraction-1.tsv.0.parsed": TSV_POLYGONS,
+    "document-extraction-1.tsv.0": TSV_POLYGONS,
+    "audio-transcription-formulas.md.3.parsed": MD_FRONTMATTER,
+    "audio-transcription-formulas.md.0.parsed": MD_FRONTMATTER,
+    "audio-transcription-text-only.md.3.parsed": MD_FRONTMATTER,
+    "audio-transcription-text-only.md.1.parsed": MD_FRONTMATTER,
+    "audio-transcription-text-only.md.0.parsed": MD_FRONTMATTER,
+    "audio-transcription-legacy-ids.tsv.1.parsed": TSV_SPEAKER_IDS,
+    "audio-transcription-legacy-ids.tsv.1": TSV_SPEAKER_IDS,
+    "audio-transcription-2.tsv.1.parsed": TSV_SPEAKER_IDS,
+    "audio-transcription-2.tsv.1": TSV_SPEAKER_IDS,
+    "audio-transcription-1.tsv.1.parsed": TSV_SPEAKER_IDS,
+    "audio-transcription-1.tsv.1": TSV_SPEAKER_IDS,
     "audio-transcription-1.md.0": FRONTMATTER,
     "audio-transcription-1.md.0.parsed": MD_PARSE,
     "audio-transcription-1.md.1": FRONTMATTER,

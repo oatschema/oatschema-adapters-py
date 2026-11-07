@@ -3,6 +3,9 @@
 
 import math
 
+from oatschema_adapters._numbers import seconds_from
+from oatschema_adapters._options import shorten
+
 
 def split_milliseconds(seconds: float) -> tuple[int, int, int, int]:
     """Return ``(hours, minutes, seconds, milliseconds)`` for ``seconds``, rounded to the nearest millisecond.
@@ -29,14 +32,23 @@ def parse_clock(text: str) -> float:
     """Return the seconds in ``[[HH:]MM:]SS[.mmm]``.
 
     Raises:
-        ValueError: ``text`` isn't a time.
+        ValueError: ``text`` isn't a time, or is one a double can't hold without rounding it.
     """
     parts = text.strip().split(":")
-    if len(parts) > 3 or not all(parts):
-        raise ValueError(f"not a time: {text!r}")
-    seconds = 0.0
-    for part in parts:
-        seconds = seconds * 60 + float(part)
-    if not math.isfinite(seconds) or seconds < 0:
-        raise ValueError(f"not a time: {text!r}")
+    if (
+        len(parts) > 3
+        or not all(parts)
+        or not all(part.isascii() and part.isdigit() for part in parts[:-1])
+        or parts[-1].lstrip()[:1] in ("+", "-")
+    ):
+        raise ValueError(f"not a time: {shorten(text)}")
+    try:
+        minutes = 0
+        for part in parts[:-1]:
+            minutes = minutes * 60 + int(part)
+        seconds = seconds_from(minutes * 60, parts[-1])
+    except ValueError:
+        raise ValueError(f"not a time: {shorten(text)}") from None
+    if seconds < 0:
+        raise ValueError(f"not a time: {shorten(text)}")
     return seconds

@@ -5,6 +5,21 @@ from oatschema_adapters._registry import register_adapter
 
 _AUDIO = "oatschema_adapters.audio"
 _DOCUMENT = "oatschema_adapters.document"
+_JSON = "oatschema_adapters._json"
+_OATS_SCHEMAS = (
+    "audio-transcription",
+    "classification",
+    "document-extraction",
+    "embedding",
+    "entity-extraction",
+    "generic",
+    "geolocation",
+    "llm-output",
+    "object-detection",
+    "ranking",
+    "regression",
+    "temporal-segmentation",
+)
 
 
 def register_builtin_adapters() -> None:
@@ -41,4 +56,15 @@ def register_builtin_adapters() -> None:
             export=f"{_DOCUMENT}._{fmt}:to_{fmt}",
             parse=f"{_DOCUMENT}._{fmt}:from_{fmt}" if parses else None,
             aliases=aliases,
+        )
+
+    for schema in _OATS_SCHEMAS:
+        function = schema.replace("-", "_")
+        register_adapter(
+            schema,
+            "json",
+            description="JSON (.json) - The record itself, as JSON text.",
+            extension="json",
+            export=f"{_JSON}:to_{function}",
+            parse=f"{_JSON}:from_{function}",
         )

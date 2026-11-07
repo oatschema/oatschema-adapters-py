@@ -4,6 +4,8 @@
 """Export OATS (Open Annotation Task Schemas) records to standard formats, and parse them back."""
 
 from oatschema_adapters._builtin import register_builtin_adapters
+from oatschema_adapters._options import AdapterOption
+from oatschema_adapters._parsed import ParsedRecord
 from oatschema_adapters._registry import (
     Adapter,
     format_aliases,
@@ -13,10 +15,12 @@ from oatschema_adapters._registry import (
     register_adapter,
 )
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
     "Adapter",
+    "AdapterOption",
+    "ParsedRecord",
     "__version__",
     "format_aliases",
     "get_adapter",

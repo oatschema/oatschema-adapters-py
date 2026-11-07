@@ -1,0 +1,10 @@
+{
+  "segments": [
+    {
+      "label": "intro",
+      "start_time": 0,
+      "end_time": 1.5
+    }
+  ],
+  "producer": "p"
+}

@@ -5,8 +5,10 @@ import io
 import subprocess
 import sys
 from collections.abc import Iterator
+import typing
 from typing import Any
 
+import oatschema
 import pytest
 
 import oatschema_adapters
@@ -14,12 +16,12 @@ from oatschema_adapters import Adapter, format_aliases, get_adapter, list_format
 from oatschema_adapters import _registry
 
 OATS_FORMATS = {
-    "audio-transcription": ["md", "srt", "tsv", "txt", "vtt"],
-    "document-extraction": ["hocr", "html", "md", "tsv", "txt"],
+    "audio-transcription": ["json", "md", "srt", "tsv", "txt", "vtt"],
+    "document-extraction": ["hocr", "html", "json", "md", "tsv", "txt"],
 }
 PARSERS = {
-    "audio-transcription": {"md", "srt", "tsv", "txt", "vtt"},
-    "document-extraction": {"hocr", "tsv", "txt"},
+    "audio-transcription": {"json", "md", "srt", "tsv", "txt", "vtt"},
+    "document-extraction": {"hocr", "json", "tsv", "txt"},
 }
 EXTENSIONS = {"hocr": "hocr.html"}
 
@@ -95,7 +97,7 @@ def test_adapter_without_functions_raises_not_implemented() -> None:
 
 
 def test_list_schemas() -> None:
-    assert list_schemas() == ["audio-transcription", "document-extraction"]
+    assert list_schemas() == sorted(typing.get_args(oatschema.SchemaName))
 
 
 @pytest.mark.parametrize("schema", sorted(OATS_FORMATS))
@@ -141,13 +143,13 @@ def test_one_way_adapter_cannot_parse() -> None:
 
 
 def test_get_adapter_unknown_format_lists_formats() -> None:
-    with pytest.raises(ValueError, match="no 'fake' adapter for schema 'audio-transcription'; formats: md, srt"):
+    with pytest.raises(ValueError, match="no 'fake' adapter for schema 'audio-transcription'; formats: json, md, srt"):
         get_adapter("audio-transcription", "fake")
 
 
 def test_get_adapter_unknown_schema() -> None:
-    with pytest.raises(ValueError, match="no adapters for schema 'classification'$"):
-        get_adapter("classification", "txt")
+    with pytest.raises(ValueError, match="no adapters for schema 'example/unknown'$"):
+        get_adapter("example/unknown", "txt")
 
 
 def test_get_adapter_explains_the_old_prefix() -> None:
@@ -188,8 +190,8 @@ def test_register_callable_adapter(registry: None) -> None:
 
 
 def test_register_adds_a_format_to_an_oats_schema(registry: None) -> None:
-    register_adapter("document-extraction", "json", description="JSON", extension="json", export="json:dumps")
-    assert "json" in [name for name, _ in list_formats("document-extraction")]
+    register_adapter("document-extraction", "alto", description="ALTO", extension="xml", export="json:dumps")
+    assert "alto" in [name for name, _ in list_formats("document-extraction")]
 
 
 def test_register_refuses_to_shadow_a_format(registry: None) -> None:
@@ -264,6 +266,8 @@ def test_importing_the_package_imports_no_adapter() -> None:
     loaded, after = result.stdout.splitlines()
     assert loaded.split(",") == [
         "oatschema_adapters._builtin",
+        "oatschema_adapters._options",
+        "oatschema_adapters._parsed",
         "oatschema_adapters._registry",
         "oatschema_adapters.audio",
         "oatschema_adapters.document",
@@ -275,7 +279,7 @@ def test_subpackages_export_their_functions_lazily() -> None:
     from oatschema_adapters import audio, document
 
     assert sorted(audio.__all__) == sorted(
-        f"{d}_{f}" for f in OATS_FORMATS["audio-transcription"] for d in ("from", "to")
+        f"{d}_{f}" for f in OATS_FORMATS["audio-transcription"] if f != "json" for d in ("from", "to")
     )
     assert set(document.__all__) == {
         "to_html",
@@ -299,3 +303,19 @@ def test_version() -> None:
     import importlib.metadata
 
     assert oatschema_adapters.__version__ == importlib.metadata.version("oatschema-adapters")
+
+
+def test_registered_functions_are_described(registry: None) -> None:
+    def export(record: dict[str, Any], *, level: int, name: "Missing" = "x", **more: Any) -> str:  # type: ignore[name-defined]  # noqa: F821
+        """Export.
+
+        Args:
+            record: The record.
+            level: How deep.
+        """
+        return ""
+
+    register_adapter("example/introspection", "x", description="X", extension="x", export=export)
+    level, name = get_adapter("example/introspection", "x").export_options
+    assert (level.name, level.required, level.default, level.description) == ("level", True, None, "How deep.")
+    assert (name.name, name.type, name.default, name.description) == ("name", "any value", "x", "")
