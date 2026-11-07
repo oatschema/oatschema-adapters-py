@@ -200,13 +200,11 @@ def test_from_hocr_attribute_deserialization() -> None:
 
 
 def test_from_hocr_polygon_deserialization() -> None:
-    """Ensure polygons are restored correctly, and bad polygons are safely ignored."""
+    """Ensure polygons are restored correctly, and bad polygons are refused."""
     hocr_input = """
     <div class="ocr_page" id="page_1">
         <span class="ocr_line" data-polygon="[{&quot;x&quot;:10, &quot;y&quot;:10}]">Good Poly</span>
         <span class="ocr_line" data-multi-polygon="[[{&quot;x&quot;:10, &quot;y&quot;:10}]]">Good Multi</span>
-        <span class="ocr_line" data-polygon="bad_json">Bad Poly</span>
-        <span class="ocr_line" data-multi-polygon="bad_json">Bad Multi</span>
     </div>
     """
     record = from_hocr(hocr_input, validate=False)
@@ -215,28 +213,27 @@ def test_from_hocr_polygon_deserialization() -> None:
     assert blocks[0]["polygon"] == [{"x": 10, "y": 10}]
     assert blocks[1]["multi_polygon"] == [[{"x": 10, "y": 10}]]
 
-    assert "polygon" not in blocks[2]
-    assert "multi_polygon" not in blocks[3]
+    for attribute in ("data-polygon", "data-multi-polygon"):
+        with pytest.raises(ValueError, match="not valid JSON"):
+            from_hocr(f'<span class="ocr_line" {attribute}="bad_json">Bad</span>', validate=False)
 
 
 def test_from_hocr_title_parsing_edge_cases() -> None:
-    """Hit the ValueError try/excepts for malformed titles."""
+    """Malformed numbers are refused, and empty or unknown title properties are ignored."""
     hocr_input = """
     <div class="ocr_page" id="page_1">
-        <span class="ocr_line" title="bbox a b c d; x_wconf bad; something else">Bad Floats</span>
-        <span class="ocr_line" title="bbox 1 2 3">Missing coordinates</span>
         <span class="ocr_line" title=" ; ; ; ">Empty props</span>
     </div>
     """
     record = from_hocr(hocr_input, validate=False)
     blocks = record["blocks"]
 
-    assert blocks[0]["text"] == "Bad Floats"
+    assert blocks[0]["text"] == "Empty props"
     assert "box" not in blocks[0]
-    assert "score" not in blocks[0]
 
-    assert blocks[1]["text"] == "Missing coordinates"
-    assert "box" not in blocks[1]
+    for title in ("bbox a b c d", "x_wconf bad", "bbox nan 0 1 1", "x_wconf inf"):
+        with pytest.raises(ValueError, match="not a number"):
+            from_hocr(f'<span class="ocr_line" title="{title}">Bad</span>', validate=False)
 
 
 def test_from_hocr_empty_content() -> None:

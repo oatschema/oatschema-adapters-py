@@ -11,7 +11,6 @@ from oatschema_adapters.document._tsv import from_tsv, to_tsv
 VALID_TSV = """page_number\tblock_type\tx\ty\twidth\theight\ttext
 1\ttext\t10.5\t20.0\t100\t50\tHello world
 2\tbox\t\t\t\t\tJust some text
-3\t\tbad_x\t\t\t\tText with bad x
 """
 
 
@@ -29,7 +28,7 @@ def test_from_tsv_conversion() -> None:
     record = from_tsv(VALID_TSV, producer="test-runner", validate=False)
 
     assert record["producer"] == "test-runner"
-    assert len(record["blocks"]) == 3
+    assert len(record["blocks"]) == 2
 
     assert record["blocks"][0]["page_number"] == 1
     assert record["blocks"][0]["block_type"] == "text"
@@ -41,8 +40,8 @@ def test_from_tsv_conversion() -> None:
     assert record["blocks"][1]["text"] == "Just some text"
     assert "box" not in record["blocks"][1]
 
-    assert record["blocks"][2]["text"] == "Text with bad x"
-    assert "box" not in record["blocks"][2]
+    with pytest.raises(ValueError, match="not a number"):
+        from_tsv("x\ttext\nbad_x\tText with bad x\n", validate=False)
 
 
 def test_to_tsv_empty() -> None:

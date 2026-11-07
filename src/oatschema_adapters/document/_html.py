@@ -73,7 +73,7 @@ def to_html(
     Args:
         record: The record to render.
         validate: Validate the record before rendering it.
-        schema_version: The schema version to validate against, such as ``"0.8.0"``. Defaults to the newest.
+        schema_version: The schema version to validate against, such as ``"0.9.0"``. Defaults to the newest.
         strict: Keep each line of a paragraph on its own line.
         layout: ``"col"`` (a single column), ``"grid"`` (rows and columns inferred from the block coordinates) or
             ``"wireframe"`` (each block drawn at its coordinates).

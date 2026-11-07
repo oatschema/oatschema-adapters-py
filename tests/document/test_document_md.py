@@ -37,9 +37,10 @@ def test_to_md_rich_rag_features() -> None:
 
 
 def test_to_md_empty() -> None:
-    """Ensure egress fails gracefully if blocks are missing."""
-    with pytest.raises(ValueError):
-        to_md({"extraction_type": "text", "blocks": []}, validate=False)
+    """A record with no blocks, as from an image-only PDF, says so, after any frontmatter."""
+    record = {"producer": "p", "extraction_type": "text", "blocks": []}
+    assert to_md(record) == "---\nproducer: p\nextraction_type: text\n---\n\n*No content extracted from this document.*"
+    assert to_md(record, include_frontmatter=False) == "*No content extracted from this document.*"
 
 
 def test_to_md_validation_and_skips() -> None:

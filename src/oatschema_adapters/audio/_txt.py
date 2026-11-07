@@ -1,10 +1,11 @@
 # SPDX-FileCopyrightText: 2026 The OATS Authors
 # SPDX-License-Identifier: Apache-2.0
 
-from typing import Any
+from typing import Any, Literal
 
 from oatschema_adapters._options import checked
-from oatschema_adapters._validation import check_record, validate_record
+from oatschema_adapters._parsed import ParsedRecord
+from oatschema_adapters._validation import check_record, finish_parse
 
 
 @checked
@@ -19,7 +20,7 @@ def to_txt(
     Args:
         record: The record to convert.
         validate: Validate the record before converting it.
-        schema_version: The schema version to validate against, such as ``"0.8.0"``. Defaults to the newest.
+        schema_version: The schema version to validate against, such as ``"0.9.0"``. Defaults to the newest.
 
     Raises:
         ValueError: The record has no text and no segments.
@@ -45,14 +46,17 @@ def from_txt(
     producer: str = "txt-adapter",
     validate: bool = True,
     schema_version: str | None = None,
-) -> dict[str, Any]:
+    on_bad_number: Literal["drop", "raise"] = "drop",
+) -> ParsedRecord:
     """Wrap plain text in an ``audio-transcription`` record, as its ``text``.
 
     Args:
         txt_content: The text.
         producer: The record's ``producer``.
-        validate: Validate the record before returning it.
+        validate: Check the record's numbers and validate it before returning it.
         schema_version: The schema version to validate against. Defaults to the newest.
+        on_bad_number: What ``oatschema.check_numbers`` does with a bad number in an optional property: ``"drop"``
+            removes it and reports it in the result's ``dropped``, and ``"raise"`` rejects the record.
 
     Raises:
         ValueError: The text is empty.
@@ -62,6 +66,6 @@ def from_txt(
         raise ValueError("Provided text content is empty.")
 
     record = {"producer": producer, "text": txt_content.strip()}
-    if validate:
-        validate_record(record, "audio-transcription", version=schema_version)
-    return record
+    return finish_parse(
+        record, "audio-transcription", validate=validate, version=schema_version, on_bad_number=on_bad_number
+    )

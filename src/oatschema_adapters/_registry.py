@@ -1,12 +1,20 @@
 # SPDX-FileCopyrightText: 2026 The OATS Authors
 # SPDX-License-Identifier: Apache-2.0
 
+import gzip
 import importlib
 import json
+import os
 import threading
+import zlib
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from typing import IO, Any
+
+from oatschema_adapters._options import AdapterOption, _convert, _NoMatch, describe_options, shorten
+
+DEFAULT_MAX_SIZE = 256 * 1024 * 1024
+_READ_CHUNK = 1024 * 1024
 
 ExportFunction = Callable[..., Any]
 ParseFunction = Callable[..., dict[str, Any]]
@@ -21,6 +29,74 @@ class _Entry:
     export: str | ExportFunction | None
     parse: str | ParseFunction | None
     aliases: tuple[str, ...]
+
+
+def _is_gzip_path(path: str | os.PathLike[str]) -> bool:
+    return os.fspath(path).lower().endswith(".gz")
+
+
+def _too_large(max_size: int) -> ValueError:
+    return ValueError(f"the content is larger than max_size ({max_size} bytes); pass a larger max_size to read it")
+
+
+def _read_capped(stream: Any, max_size: int) -> Any:
+    chunks: list[Any] = []
+    total = 0
+    while total <= max_size:
+        chunk = stream.read(min(_READ_CHUNK, max_size + 1 - total))
+        chunks.append(chunk)
+        if not chunk:
+            break
+        total += len(chunk)
+    if total > max_size:
+        raise _too_large(max_size)
+    return chunks[0][:0].join(chunks)
+
+
+def _read_path(path: str | os.PathLike[str], max_size: int) -> str:
+    with open(path, "rb") as raw:
+        data = _read_gzip(raw, max_size) if _is_gzip_path(path) else _read_capped(raw, max_size)
+    try:
+        return data.decode("utf-8-sig")
+    except UnicodeDecodeError as error:
+        position = error.start
+    raise ValueError(f"the file is not valid UTF-8 at byte {position}")
+
+
+def _read_gzip(raw: IO[bytes], max_size: int) -> bytes:
+    try:
+        with gzip.GzipFile(fileobj=raw) as unzipped:
+            data: bytes = _read_capped(unzipped, max_size)
+            return data
+    except (gzip.BadGzipFile, EOFError, zlib.error) as error:
+        kind = type(error).__name__
+    raise ValueError(f"the file is not valid gzip ({kind})")
+
+
+def _write_path(path: str | os.PathLike[str], output: str | bytes) -> None:
+    position: int | None = None
+    data = b""
+    try:
+        data = output.encode("utf-8") if isinstance(output, str) else output
+    except UnicodeEncodeError as error:
+        position = error.start
+    if position is not None:
+        raise ValueError(f"the output can't be written as UTF-8: bad character at {position}")
+    if _is_gzip_path(path):
+        data = gzip.compress(data, mtime=0)
+    with open(path, "wb") as raw:
+        raw.write(data)
+
+
+def _check_max_size(value: object) -> int:
+    try:
+        size: int = _convert(value, int)
+    except _NoMatch:
+        error = ValueError if isinstance(value, str) else TypeError
+        raise error(f"max_size must be an integer, not {shorten(value)}") from None
+    if size < 1:
+        raise ValueError(f"max_size must be at least 1, not {size}")
+    return size
 
 
 class Adapter:
@@ -73,10 +149,17 @@ class Adapter:
         if self._export_fn is None:
             raise NotImplementedError(f"exporting to {self.format_name!r} isn't supported for {self.schema_id!r}")
         if isinstance(record, (str, bytes)):
+            problem = None
             try:
                 record = json.loads(record)
             except json.JSONDecodeError as error:
-                raise ValueError(f"the record is not valid JSON: {error}") from error
+                problem = f"{error.msg} at line {error.lineno}, column {error.colno}"
+            except UnicodeDecodeError as error:
+                problem = f"bad text at byte {error.start}"
+            except RecursionError:
+                problem = "it is nested too deeply"
+            if problem:
+                raise ValueError(f"the record is not valid JSON: {problem}")
         if not isinstance(record, dict):
             raise TypeError(f"the record must be a JSON object, not {type(record).__name__}")
         return self._export_fn(record, **options)
@@ -94,15 +177,50 @@ class Adapter:
             raise NotImplementedError(f"parsing {self.format_name!r} isn't supported for {self.schema_id!r}")
         return self._parse_fn(content, **options)
 
-    def export_file(self, record: dict[str, Any] | str | bytes, fp: IO[Any], **options: Any) -> None:
-        """Export ``record`` and write the result to the file object ``fp``."""
-        fp.write(self.export(record, **options))
+    def export_file(
+        self, record: dict[str, Any] | str | bytes, fp: IO[Any] | str | os.PathLike[str], **options: Any
+    ) -> None:
+        """Export ``record`` and write the result to ``fp``, a file object or a path.
 
-    def parse_file(self, fp: IO[Any], **options: Any) -> dict[str, Any]:
-        """Read the file object ``fp`` and parse its content into a record."""
+        A path is written as UTF-8, gzip-compressed if it ends in ``.gz``, with the same bytes each time. A file
+        object is written to as it is, so compress it yourself if you need to.
+        """
+        output = self.export(record, **options)
+        if isinstance(fp, (str, os.PathLike)):
+            _write_path(fp, output)
+        else:
+            fp.write(output)
+
+    def parse_file(
+        self, fp: IO[Any] | str | os.PathLike[str], *, max_size: int = DEFAULT_MAX_SIZE, **options: Any
+    ) -> dict[str, Any]:
+        """Read ``fp``, a file object or a path, and parse its content into a record.
+
+        A path is read as UTF-8, and gunzipped if it ends in ``.gz``. A file object is read as it is. Reading stops
+        at ``max_size``, which counts decompressed bytes for a ``.gz`` path, and characters for a file object in text
+        mode. The default is 256 MiB.
+
+        Raises:
+            NotImplementedError: this adapter only exports.
+            ValueError: the content is over ``max_size``, or isn't valid gzip or UTF-8, or can't be parsed.
+            OSError: the file can't be read.
+        """
         if self._parse_fn is None:
             raise NotImplementedError(f"parsing {self.format_name!r} isn't supported for {self.schema_id!r}")
-        return self.parse(fp.read(), **options)
+        size = _check_max_size(max_size)
+        if isinstance(fp, (str, os.PathLike)):
+            return self.parse(_read_path(fp, size), **options)
+        return self.parse(_read_capped(fp, size), **options)
+
+    @property
+    def export_options(self) -> tuple[AdapterOption, ...]:
+        """The options ``export`` takes: each one's name, type, default, whether it's required, and description."""
+        return describe_options(self._export_fn)
+
+    @property
+    def parse_options(self) -> tuple[AdapterOption, ...]:
+        """The options ``parse`` takes: each one's name, type, default, whether it's required, and description."""
+        return describe_options(self._parse_fn)
 
     def __repr__(self) -> str:
         return f"Adapter(schema_id={self.schema_id!r}, format_name={self.format_name!r})"

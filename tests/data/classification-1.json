@@ -1,0 +1,13 @@
+{
+  "labels": [
+    {
+      "label": "cat",
+      "score": 0.9
+    }
+  ],
+  "vocabulary": [
+    "cat",
+    "dog"
+  ],
+  "producer": "p"
+}

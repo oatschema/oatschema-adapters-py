@@ -64,8 +64,6 @@ def _parses_back(schema: str, fmt: str, record: dict[str, Any]) -> bool:
     blocks = record.get("blocks", [])
     if fmt == "hocr":
         return any(block.get("text") for block in blocks)
-    if fmt == "tsv" and schema == "document-extraction":
-        return not any(block["block_type"] in ("polygon", "multi_polygon") for block in blocks)
     return True
 
 
@@ -131,10 +129,9 @@ def test_from_hocr_gives_page_sizes_only_to_versions_that_have_them(version: str
     assert ("page_height" in parsed) == (version != "0.4.0")
 
 
-def test_tsv_of_polygon_blocks_does_not_parse_into_valid_blocks() -> None:
+def test_tsv_of_polygon_blocks_parses_into_valid_blocks() -> None:
     adapter = get_adapter("document-extraction", "tsv")
-    with pytest.raises(oatschema.ValidationError, match='"polygon" is a required property'):
-        adapter.parse(adapter.export(load("document-extraction-1")))
+    assert oatschema.is_valid(adapter.parse(adapter.export(load("document-extraction-1"))), "document-extraction")
 
 
 @pytest.mark.parametrize(
@@ -147,7 +144,7 @@ def test_invalid_records_raise_bounded_validation_errors(schema: str, fmt: str, 
         get_adapter(schema, fmt).export(record)
     error = caught.value
     assert error.schema_name == schema
-    assert error.schema_version == "0.8.0"
+    assert error.schema_version == oatschema.SCHEMA_VERSION
     assert error.keyword
     assert isinstance(error, ValueError)
     assert len(str(error)) < 1200

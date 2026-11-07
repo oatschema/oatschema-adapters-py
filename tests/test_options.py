@@ -159,7 +159,7 @@ def test_every_exporter_has_options_to_test() -> None:
         (schema, fmt)
         for schema, formats in OATS_FORMATS.items()
         for fmt in formats
-        if fmt != "tsv" or schema != "document-extraction"
+        if (fmt != "tsv" or schema != "document-extraction") and fmt != "json"
     } - {("audio-transcription", "txt"), ("document-extraction", "hocr")}
 
 
@@ -180,7 +180,9 @@ def test_validate_false_as_a_string_skips_validation(schema: str, fmt: str) -> N
     adapter.export(record, validate="false")
 
 
-@pytest.mark.parametrize(("schema", "fmt"), [(s, f) for s, formats in PARSERS.items() for f in sorted(formats)])
+@pytest.mark.parametrize(
+    ("schema", "fmt"), [(s, f) for s, formats in PARSERS.items() for f in sorted(formats) if f != "json"]
+)
 def test_parse_options_from_strings(schema: str, fmt: str) -> None:
     adapter = get_adapter(schema, fmt)
     content = adapter.export(RECORDS[schema])

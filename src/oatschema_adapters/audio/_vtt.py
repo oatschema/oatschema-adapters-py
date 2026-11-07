@@ -2,13 +2,44 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import html
-from typing import Any
+import re
+from typing import Any, Literal
 
 import webvtt
 
-from oatschema_adapters._options import checked
-from oatschema_adapters._validation import check_record, validate_record
+from oatschema_adapters._numbers import MAX_ITEMS
+from oatschema_adapters._options import checked, shorten
+from oatschema_adapters._parsed import ParsedRecord
+from oatschema_adapters._validation import check_record, finish_parse
 from oatschema_adapters.audio._time import clock, parse_clock
+
+_COMMENT = re.compile(r"(?:NOTE|STYLE|REGION)(?:[ \t]|$)")
+_LINE_BREAK = re.compile(r"\r\n|\r|\n")
+_STAMP = r"(?:[0-9]+:)?[0-9]{1,2}:[0-9]{1,2}\.[0-9]{1,3}"
+_TIMING = re.compile(rf"\s*{_STAMP}\s*-->\s*{_STAMP}(?:\s.*)?")
+
+
+def _timing_lines(content: str) -> int:
+    lines = _LINE_BREAK.split(content.removeprefix("\ufeff"))
+    timings = 0
+    block: list[str] = []
+    for number, line in enumerate([*lines, ""]):
+        if line.strip():
+            block.append(line)
+            continue
+        if block and not _COMMENT.match(block[0]):
+            is_header = block[0].startswith("WEBVTT")
+            found = 0
+            for text in block[1:] if is_header else block:
+                if _TIMING.fullmatch(text):
+                    found += 1
+                elif "-->" in text:
+                    raise ValueError(f"Failed to parse WebVTT content: a bad timing before line {number + 1}")
+            if not found and not is_header:
+                raise ValueError(f"Failed to parse WebVTT content: the block before line {number + 1} has no timing")
+            timings += found
+        block = []
+    return timings
 
 
 def _cue_text(text: str) -> str:
@@ -36,7 +67,7 @@ def to_vtt(
     Args:
         record: The record to convert.
         validate: Validate the record before converting it.
-        schema_version: The schema version to validate against, such as ``"0.8.0"``. Defaults to the newest.
+        schema_version: The schema version to validate against, such as ``"0.9.0"``. Defaults to the newest.
         include_speakers: Mark each caption with its speaker's name, as a ``<v Name>`` voice span.
 
     Raises:
@@ -72,26 +103,40 @@ def from_vtt(
     producer: str = "vtt-adapter",
     validate: bool = True,
     schema_version: str | None = None,
-) -> dict[str, Any]:
+    on_bad_number: Literal["drop", "raise"] = "drop",
+) -> ParsedRecord:
     """Parse WebVTT captions into an ``audio-transcription`` record, with one segment per caption.
 
-    A caption's voice span (``<v Name>``) becomes the segment's speaker. Character references such as ``&amp;`` are
-    decoded.
+    A caption's voice span (``<v Name>``) becomes the segment's speaker. WebVTT has nowhere to hold a speaker's id,
+    so the id is the name. Character references such as ``&amp;`` are decoded.
 
     Args:
         vtt_content: The WebVTT text.
         producer: The record's ``producer``.
-        validate: Validate the record before returning it.
+        validate: Check the record's numbers and validate it before returning it.
         schema_version: The schema version to validate against. Defaults to the newest.
+        on_bad_number: What ``oatschema.check_numbers`` does with a bad number in an optional property: ``"drop"``
+            removes it and reports it in the result's ``dropped``, and ``"raise"`` rejects the record.
 
     Raises:
-        ValueError: The content isn't valid WebVTT.
+        ValueError: The content isn't valid WebVTT, has more than 100,000 captions, has a timing it can't read, or
+            has a block with no timing, other than the header and ``NOTE``, ``STYLE`` and ``REGION`` blocks.
         oatschema.ValidationError: The parsed record doesn't conform to the schema.
     """
+    timings = _timing_lines(vtt_content)
+    if timings > MAX_ITEMS:
+        raise ValueError(f"Failed to parse WebVTT content: more than {MAX_ITEMS} captions")
+
+    problem = None
     try:
         vtt = webvtt.from_string(vtt_content)
     except Exception as error:
-        raise ValueError(f"Failed to parse WebVTT content: {error}") from error
+        problem = shorten(str(error), 200)
+    if problem:
+        raise ValueError(f"Failed to parse WebVTT content: {problem}")
+
+    if len(vtt.captions) != timings:
+        raise ValueError("Failed to parse WebVTT content: its captions don't match its timing lines")
 
     segments = []
     texts = []
@@ -110,6 +155,6 @@ def from_vtt(
         texts.append(text)
 
     record = {"producer": producer, "text": " ".join(texts), "segments": segments}
-    if validate:
-        validate_record(record, "audio-transcription", version=schema_version)
-    return record
+    return finish_parse(
+        record, "audio-transcription", validate=validate, version=schema_version, on_bad_number=on_bad_number
+    )
